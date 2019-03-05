@@ -10,7 +10,6 @@ import {
   List,
   Dialog,
   Toast,
-  Field
  } from 'vant'
 
 Vue.use(Button)
@@ -19,7 +18,6 @@ Vue.use(SwipeItem)
 Vue.use(List)
 Vue.use(Dialog)
 Vue.use(Toast);
-Vue.use(Field);
 
 Vue.config.productionTip = false
 
