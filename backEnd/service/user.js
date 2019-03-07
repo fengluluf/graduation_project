@@ -1,7 +1,7 @@
 const db = require('../db/config');
 let show = () => {
   return new  Promise((resolve, reject) => {
-    db.query('select * from user', (err, rows) => {
+    db.query('select * from userinfo', (err, rows) => {
       if(err) {
         reject(err);
       }
@@ -12,7 +12,7 @@ let show = () => {
 
 let select = (attributename, attribute) => {
   return new Promise((resolve, reject) => {
-    db.query(`select * from user where ${attributename} = '${attribute}'`, (err, rows) => {
+    db.query(`select * from userinfo where ${attributename} = '${attribute}'`, (err, rows) => {
       if(err) {
         reject(err);
       }
@@ -23,7 +23,7 @@ let select = (attributename, attribute) => {
 
 let update = (updateattributename, newdata,attributename,attribute) => {
   return new Promise((resolve, reject) => {
-    db.query(`update user set ${updateattributename} = '${newdata}' where ${attributename} = '${attribute}'`,(err,rows) => {
+    db.query(`update userinfo set ${updateattributename} = '${newdata}' where ${attributename} = '${attribute}'`,(err,rows) => {
       if(err) {
         reject(err);
       }
@@ -34,7 +34,7 @@ let update = (updateattributename, newdata,attributename,attribute) => {
 
 let insert = (attributenames, attributes) => {
   return new Promise((resolve, reject) => {
-    db.query(`insert into user ${attributenames} values ${attributes}`, (err,rows) => {
+    db.query(`insert into userinfo (${attributenames}) values (${attributes})`, (err,rows) => {
       if(err) {
         reject(err);
       }

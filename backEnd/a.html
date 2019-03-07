@@ -7,18 +7,35 @@
   <title>Document</title>
 </head>
 <body>
-  <button>点击</button>
+  <input type="text" placeholder="用户名" class="name">
+  <input type="text" placeholder="输入密码" class="password">
+  <button class="send">发送验证码</button>
+  <button class="put">点击</button>
 </body>
 <script src="jquery.min.js"></script>
 <script>
-  $('button').on('click',function(){
-
+  $('.send').on('click',function(){
     $.ajax({
       type:'post',
-      url:'http://localhost:3000/users',
-      data:JSON.stringify({
-        'telNumber':'15732115283'
-      }),
+      url:'http://localhost:3000/users/hh-login/send',
+      // dataType:'jsonp',
+      data:{
+        telNumber:$('input').val()
+      },
+      success:function(res){
+        console.log(res);
+      }
+    })
+  })
+  $('.put').on('click',function(){
+    $.ajax({
+      type:'post',
+      url:'http://localhost:3000/users/hh-login/login',
+      // dataType:'jsonp',
+      data:{
+        userNumber:$('.name').val(),
+        password:$('.password').val()
+      },
       success:function(res){
         console.log(res);
       }
