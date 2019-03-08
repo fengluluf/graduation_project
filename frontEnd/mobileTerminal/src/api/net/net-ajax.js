@@ -1,5 +1,4 @@
 import $ from 'jquery'
-import {version} from '../../config'
 
 export default {
     /****单条数据处理***/
@@ -52,7 +51,6 @@ export default {
                     });
                     op.success(sucData);
                 }else if(sucData.resultCode===403||sucData.resultCode===401){
-                    location.href = baseUrl+'/app/v'+version+'/index.html#/login';
                     Toast({
                         message: sucData.resultMessage,
                     });

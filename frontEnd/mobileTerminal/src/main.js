@@ -3,23 +3,11 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import {
-  Button,
-  Swipe,
-  SwipeItem,
-  List,
-  Dialog,
-  Toast,
-  Field
- } from 'vant'
+import Vant from 'vant';
+import 'vant/lib/index.css';
 
-Vue.use(Button)
-Vue.use(Swipe)
-Vue.use(SwipeItem)
-Vue.use(List)
-Vue.use(Dialog)
-Vue.use(Toast);
-Vue.use(Field);
+Vue.use(Vant);
+
 
 Vue.config.productionTip = false
 
