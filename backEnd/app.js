@@ -7,6 +7,8 @@ var session = require('express-session');
 
 var indexRouter = require('./routes/front/index');
 var usersRouter = require('./routes/front/users');
+var articleRouter = require('./routes/front/article');
+var drugRouter = require('./routes/front/drug');
 
 var app = express();
 
@@ -36,12 +38,15 @@ app
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false
+      // secure: false,
+      maxAge : 1000 * 60 * 3,
     }
   }));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/article', articleRouter);
+app.use('/drug',drugRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

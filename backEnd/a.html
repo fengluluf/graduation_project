@@ -11,6 +11,7 @@
   <input type="text" placeholder="输入密码" class="password">
   <button class="send">发送验证码</button>
   <button class="put">点击</button>
+  <a href="b.html">登录</a>
 </body>
 <script src="jquery.min.js"></script>
 <script>
@@ -27,6 +28,7 @@
       }
     })
   })
+  
   $('.put').on('click',function(){
     $.ajax({
       type:'post',

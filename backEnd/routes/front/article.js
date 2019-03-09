@@ -10,7 +10,7 @@ module.exports = router
     });
   })
 
-  //首页banner图
+  //文章点赞
   .get('/indexBanner',function(req,res,next){
     
   });
