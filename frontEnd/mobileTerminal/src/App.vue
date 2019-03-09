@@ -1,16 +1,30 @@
 <template>
-  <div id="app">
-    <keep-alive>
-        <router-view v-if="$route.meta.keepAlive"></router-view>
-    </keep-alive>
+    <div id="app">
+        <keep-alive>
+            <router-view v-if="$route.meta.keepAlive"></router-view>
+        </keep-alive>
 
-    <router-view v-if="!$route.meta.keepAlive"></router-view>
-  </div>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
+        <Tabbar v-if="$route.meta.needTab" @on-tabChange="changeTab"></Tabbar>
+    </div>
 </template>
 
 <script>
+import Tabbar from "./components/tabbar.vue"
 export default {
-  name: 'App'
+    components:{Tabbar},
+    name: 'App',
+    methods: {
+        changeTab(active){
+            if(active==0){
+                this.$router.push('/home');
+            }else if(active==1){
+                this.$router.push('/share');
+            }else if(active==2){
+                this.$router.push('/personal');
+            }
+        }
+    },
 }
 </script>
 
@@ -20,12 +34,13 @@ export default {
     padding:0;
     margin:0;
     font-family: STXihei;
+    
 }
 #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 32px;/*px*/
+    font-size: 16px;/*px*/
     margin:0;
     padding:0;
     height:100%;
@@ -35,11 +50,12 @@ html, body {
     height: 100%;
     padding:0;
     margin:0;
+    overflow: hidden;
 }
-.mint-datetime-confirm{
-    color: #b99052;
+.van-dialog__message{
+    font-size: 18px;
 }
-.mint-datetime-cancel{
-    color: #999;
+.van-dialog__confirm, .van-dialog__confirm:active{
+    color: #28b8a1;
 }
 </style>

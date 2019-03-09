@@ -4,25 +4,25 @@
         <div class="login-con">
             <div class="login-input">
                 <span class="iconfont icon-wode"></span>
-                <input type="number" placeholder="请输入手机号" class="input-txt">
+                <input type="number" placeholder="请输入手机号" class="input-txt" v-model="userName">
             </div>
             <div class="login-input">
                 <span class="iconfont icon-suo"></span>
-                <input :type="isShowPWD?'text':'password'" placeholder="请输入密码" class="input-txt">
+                <input :type="isShowPWD?'text':'password'" placeholder="请输入密码" class="input-txt" v-model="password">
                 <span :class="['iconfont',isShowPWD?'icon-yanjing':'icon-yanjing1']" @click="switchAttr"></span>
             </div>
             <div class="login-forget">
-                <span class="goForPwd">忘记密码?</span>
+                <span class="goForPwd" @click="goForPwd">忘记密码?</span>
             </div>
             <div class="login-btns">
-                <button class="btn loginBtn">登录</button>
-                <button class="btn registerBtn">注册</button>
+                <button class="btn loginBtn" @click="login">登录</button>
+                <button class="btn registerBtn" @click="goRegister">注册</button>
             </div>
         </div>
     </div>
 </template>
 <script>
-import pageData from "../../api/login/login.js"
+import pageData from "../../api/login/login"
 import "../../assets/style/font-icon/iconfont.css"
 import base from '../../util/base'
 
@@ -31,6 +31,7 @@ export default {
         return {
             userName: '',
             password: '',
+            errorMsg:'',
             isShowPWD:false,//是否显示密码
         }
     },
@@ -41,7 +42,56 @@ export default {
         //密码是否可见
         switchAttr(){
             this.isShowPWD = !this.isShowPWD
-        }
+        },
+        //跳转到重置密码页面
+        goForPwd(){
+            this.$router.push('/forgetPwd');
+        },
+        //跳转到注册页面
+        goRegister(){
+            this.$router.push('/register');
+        },
+        //校验用户名
+        checkName(){
+            if(this.userName === '') {
+                this.errorMsg = '请输入手机号';
+                this.$dialog.alert({
+                    message: this.errorMsg
+                });
+                return false;
+            }else{
+                return true;
+            }
+        },
+        //校验密码
+        checkPwd(){
+            if(this.password === '') {
+                this.errorMsg = '请输入密码';
+                this.$dialog.alert({
+                    message: this.errorMsg
+                });
+                return false;
+            }else{
+                return true;
+            }
+        },
+        //登录
+        login(){
+            var _this = this;
+            _this.$router.push('/home');
+            var data = {
+                userName: this.userName,
+                password: this.password
+            }
+            // if(this.checkName() && this.checkPwd()){
+            //     pageData.login(data).then(function (d) {
+            //         if(d.resultCode == 200) {
+            //             _this.$router.push('/home');
+            //         }
+            //     })
+            // }
+            
+        },
     },
     components: {
     }
@@ -54,15 +104,15 @@ export default {
     background-size: cover;
     overflow: scroll;
     box-sizing: border-box;
-}
-.login-header{
-    color:#fff;
-    font-size:18px;
-    text-align: center;
-    height: 50px;
-    line-height: 50px;
-    position: relative;
-    overflow: hidden;
+    .login-header{
+        color:#fff;
+        font-size:18px;
+        text-align: center;
+        height: 50px;
+        line-height: 50px;
+        position: relative;
+        overflow: hidden;
+    }
 }
 .iconfont{
     font-size:18px;
