@@ -17,10 +17,19 @@ export default {
     // },
     data () {
         return {
-            active:0,
+            active:null,
             tabItem:[{icon:'home-o',name:'首页'},
             {icon:'smile-comment-o',name:'分享'},
             {icon:'user-o',name:'我的'}]
+        }
+    },
+    created() {
+        if(this.$router.currentRoute.name=='home'){
+            this.active = 0
+        }else if(this.$router.currentRoute.name=='share'){
+            this.active = 1;
+        }else if(this.$router.currentRoute.name=='personal'){
+            this.active = 2;
         }
     },
     methods:{

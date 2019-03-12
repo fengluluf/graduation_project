@@ -28,7 +28,7 @@
                 <div class="main-sort">
                     <van-row type="flex" justify="space-around">
                         <van-col span="8" v-for="(item,key) in sortList" :key="key">
-                            <span :class="['iconfont',item.icon]" @click="getSortRec(item)"></span>
+                            <span :class="['iconfont',item.icon]" @click="getSortRec(item.fileName)"></span>
                             <div class="sort-name">{{item.name}}</div>
                         </van-col>
                     </van-row>
@@ -38,7 +38,7 @@
                     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false" :offset="50"
                     @load="listUpload"
                     class="recommend-list" >
-                        <div class="recommend-item" v-for="(item,key) in recommendList" :key="key">
+                        <div class="recommend-item" v-for="(item,key) in recommendList" :key="key" @click="gotipsDetail(key)">
                             <van-row type="flex" justify="space-around">
                                 <van-col span="16">
                                     <div class="recTitle">{{item.title}}</div>
@@ -77,16 +77,16 @@ export default {
                 {id:'2',imageUrl:'../../assets/images/banner3.jpg'}],
             recommendTitle:"推荐",//推荐列表名称
             //分类列表
-            sortList:[{id:'0',icon:"icon-yaoxiang",name:"找药品"},
-                {id:'1',icon:"icon-dingdan",name:"查疾病"},
-                {id:'2',icon:"icon-bianji",name:"健康贴士"}],
+            sortList:[{id:'0',icon:"icon-yaoxiang",name:"找药品",fileName:'findDrugs'},
+                {id:'1',icon:"icon-dingdan",name:"查疾病",fileName:'findDisease'},
+                {id:'2',icon:"icon-bianji",name:"健康贴士",fileName:'healthArticle'}],
             // 推荐列表请求
             recommendData:{ 
                 pageNo:1,
                 pageSize:10,
             },
             //推荐列表
-            recommendList:[{title:'带您走近传说中的“天山雪莲”',con:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
+            recommendList:[{},{},{title:'带您走近传说中的“天山雪莲”',con:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
             {title:'中药降压靠谱不靠谱？',con:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
             {title:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',con:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'}]
         }
@@ -141,7 +141,8 @@ export default {
         },
         //根据分类获取列表
         getSortRec(item){
-            this.recommendTitle = item.name
+            // this.recommendTitle = item.name
+            this.$router.push(item)
         }
     },
 }
