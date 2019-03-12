@@ -1,7 +1,7 @@
 const db = require('../db/config');
 let show = () => {
   return new  Promise((resolve, reject) => {
-    db.query('select * from userinfo', (err, rows) => {
+    db.query('select * from drug', (err, rows) => {
       if(err) {
         reject(err);
       }
@@ -12,18 +12,18 @@ let show = () => {
 
 let select = (attributename, attribute) => {
   return new Promise((resolve, reject) => {
-    db.query(`select * from userinfo where ${attributename} = '${attribute}'`, (err, rows) => {
+    db.query(`select * from drug where ${attributename} = '${attribute}'`, (err, rows) => {
       if(err) {
         reject(err);
       }
       resolve(rows);
     })
   })
-}//查询一行（传参,返回一个数组)
+}//查询一行（传参)
 
 let update = (updateattributename, newdata,attributename,attribute) => {
   return new Promise((resolve, reject) => {
-    db.query(`update userinfo set ${updateattributename} = '${newdata}' where ${attributename} = '${attribute}'`,(err,rows) => {
+    db.query(`update drug set ${updateattributename} = '${newdata}' where ${attributename} = '${attribute}'`,(err,rows) => {
       if(err) {
         reject(err);
       }
@@ -34,7 +34,7 @@ let update = (updateattributename, newdata,attributename,attribute) => {
 
 let insert = (attributenames, attributes) => {
   return new Promise((resolve, reject) => {
-    db.query(`insert into userinfo (${attributenames}) values (${attributes})`, (err,rows) => {
+    db.query(`insert into drug (${attributenames}) values (${attributes})`, (err,rows) => {
       if(err) {
         reject(err);
       }

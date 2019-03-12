@@ -1,13 +1,33 @@
 const express = require('express');
 const router = express.Router();
 const request = require('request'),
-  querystring = require('querystring');
+  querystring = require('querystring'),
+  utility = require('utility');
 
 const sql = require('../../service/user');
 
 /* GET users listing. */
 module.exports = router
+  //判断用户是否登录
   .get('/', async (req, res, next) => {
+    res.send('success');
+    if (req.session.user) {
+      res.send({
+        resultcode: '0000',
+        data: {
+          result: '00',
+          text: '已登录'
+        }
+      });
+    } else {
+      res.send({
+        resultcode: '0000',
+        data: {
+          result: '11',
+          text: '未登录'
+        }
+      });
+    }
     console.log('success');
   })
 
@@ -51,36 +71,42 @@ module.exports = router
   .post('/hh-login/register', async (req, res, next) => {
     if (req.session.user) {
       var user = req.session.user,
-        userName = req.data.userName,
-        password = req.data.password;
+        userName = req.body.userNumber,
+        password = req.body.password;
       var sendNumber1 = user.sendNumber,
         sendNumber2 = req.sendNumber;
       if (sendNumber1 === sendNumber2) {
         //判断用户是否存在
-        if (!sql.select('username', userName)) {
-          sql.insert(('username', 'password'), (userName,password))
-            .then(function (d) {
-              console.log(JSON.stringify(d));
-            })
-            .catch(function (err) {
-              console.log(err);
-            });
-          res.send({
-            'resultcode': '0000',
-            data: {
-              result: '00',
-              'text': '注册成功'
-            }
-          });
-        } else {
-          res.send({
-            'resultcode': '0000',
-            data: {
-              result: '01',
-              text: '用户已存在'
+        sql.select('username', userName)
+          .then(function (d) {
+            if (d[0]) {
+              res.send({
+                'resultcode': '0000',
+                data: {
+                  result: '01',
+                  text: '用户已存在'
+                }
+              })
+            } else {
+              sql.insert(['username', 'password'], [userName, password])
+                .then(function (d) {
+                  console.log(JSON.stringify(d));
+                })
+                .catch(function (err) {
+                  console.log(err);
+                });
+              res.send({
+                'resultcode': '0000',
+                data: {
+                  result: '00',
+                  'text': '注册成功'
+                }
+              });
             }
           })
-        }
+          .catch(function(err){
+            console.log(err);
+          });
 
       } else {
         res.send({
@@ -106,37 +132,50 @@ module.exports = router
   .post('/hh-login/login', async (req, res, next) => {
     var userName = req.body.userNumber,
       password = req.body.password;
+    
+    console.log(utility.sha1(userName));
+    console.log(utility.md5(password));
 
-    if (sql.select('username', userName)) {
-      sql.select('username',userName)
-        .then(function(d){
+    sql.select('username', userName)
+      .then(function (d) {
+        if (d[0]) {
           var user = d[0].username,
-              pas = d[0].password;
-          if(userName === user || pas === password){
+            pas = d[0].password;
+          if (userName !== user || pas !== password) {
             res.send({
-              resultcode:'0000',
-              data:{
-                result:'01',
-                text:'用户名或者密码错误'
+              resultcode: '0000',
+              data: {
+                result: '01',
+                text: '用户名或者密码错误'
               }
             })
-          }else{
+          } else {
+            var user = {
+              username: user,
+              password: pas
+            };
+            req.session.user = user;
+            console.log(req.session);
+            console.log(req.session.user);
             res.send({
-              resultcode:'0000',
-              data:{
-                result:'00',
-                text:'登陆成功'
+              resultcode: '0000',
+              data: {
+                result: '00',
+                text: '登陆成功'
               }
             })
           }
-        })
-    } else {
-      res.send({
-        resultcode:'0000',
-        data:{
-          result:'10',
-          text:'用户不存在'
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '10',
+              text: '用户不存在'
+            }
+          })
         }
       })
-    }
+      .catch(function (err) {
+        console.log(err);
+      });
   });
