@@ -1,7 +1,7 @@
 const db = require('../db/config');
 let show = () => {
   return new  Promise((resolve, reject) => {
-    db.query('select * from userinfo', (err, rows) => {
+    db.query('select * from article', (err, rows) => {
       if(err) {
         reject(err);
       }
@@ -12,29 +12,29 @@ let show = () => {
 
 let select = (attributename, attribute) => {
   return new Promise((resolve, reject) => {
-    db.query(`select * from userinfo where ${attributename} = '${attribute}'`, (err, rows) => {
+    db.query(`select * from article where ${attributename} = '${attribute}'`, (err, rows) => {
       if(err) {
         reject(err);
       }
       resolve(rows);
     })
   })
-}//查询一行（传参,返回一个数组)
+}//查询一行（传参)
 
 let update = (updateattributename, newdata,attributename,attribute) => {
   return new Promise((resolve, reject) => {
-    db.query(`update userinfo set ${updateattributename} = '${newdata}' where ${attributename} = '${attribute}'`,(err,rows) => {
+    db.query(`update article set ${updateattributename} = '${newdata}' where ${attributename} = '${attribute}'`,(err,rows) => {
       if(err) {
         reject(err);
       }
       resolve(rows);
     })
-  }) 
+  })
 }//修改
 
 let insert = (attributenames, attributes) => {
   return new Promise((resolve, reject) => {
-    db.query(`insert into userinfo (${attributenames}) values (${attributes})`, (err,rows) => {
+    db.query(`insert into article (${attributenames}) values (${attributes})`, (err,rows) => {
       if(err) {
         reject(err);
       }

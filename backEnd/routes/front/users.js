@@ -10,27 +10,24 @@ const sql = require('../../service/user');
 module.exports = router
   //判断用户是否登录
   .get('/', async (req, res, next) => {
-    console.log('判断用户是否登陆：');
-    console.log(req.session.user);
-    console.log(req.session);
     res.send('success');
-    // if (req.session.user) {
-    //   res.send({
-    //     resultcode: '0000',
-    //     data: {
-    //       result: '00',
-    //       text: '已登录'
-    //     }
-    //   });
-    // } else {
-    //   res.send({
-    //     resultcode: '0000',
-    //     data: {
-    //       result: '11',
-    //       text: '未登录'
-    //     }
-    //   });
-    // }
+    if (req.session.user) {
+      res.send({
+        resultcode: '0000',
+        data: {
+          result: '00',
+          text: '已登录'
+        }
+      });
+    } else {
+      res.send({
+        resultcode: '0000',
+        data: {
+          result: '11',
+          text: '未登录'
+        }
+      });
+    }
     console.log('success');
   })
 
@@ -91,7 +88,7 @@ module.exports = router
                 }
               })
             } else {
-              sql.insert(('username', 'password'), (userName, password))
+              sql.insert(['username', 'password'], [userName, password])
                 .then(function (d) {
                   console.log(JSON.stringify(d));
                 })
