@@ -3,19 +3,19 @@ import netAjax from '../net/net-ajax'
 import {develop, baseUrl} from '../../config'
 
 export default {
+
     /**
-     * 健康贴士文章
+     * 发布文章
      * @param data
      */
-    singleArticleRequest: function (data) {
+    publishRes: function (data) {
         if(develop) {
             var def = $.Deferred();
             setTimeout(function () {
                 var d = {
                     "resultCode": 200,
                     "resultJson": {
-                        "pageContent": [
-                        ],
+                        "pageContent": []
                     },
                     "resultMessage": "操作成功"
                 }
@@ -38,45 +38,14 @@ export default {
             return def;
         }
     },
-    /**
-     * 评论列表
-     * @param data
-     */
-     commentsRes: function (data) {
+    recommendRes : function (data) {
         if(develop) {
             var def = $.Deferred();
             setTimeout(function () {
                 var d = {
                     "resultCode": 200,
                     "resultJson": {
-                        "pageContent": [
-                            // {
-                            //     "concernCount": 0,
-                            //     "content": "美国",
-                            //     "createDate": "2018-12-03 10:17:22",
-                            //     "createTime": 1543803442505,
-                            //     "editorId": 1,
-                            //     "id": 80002,
-                            //     "istop": 0,
-                            //     "status": 0,
-                            //     "title": "美国",
-                            //     "updateTime": 0,
-                            //     "updaterId": 0
-                            // },
-                            // {
-                            //     "concernCount": 0,
-                            //     "content": "贯彻研究驱动投资理念",
-                            //     "createDate": "2018-12-01 21:21:32",
-                            //     "createTime": 1543670492804,
-                            //     "editorId": 1,
-                            //     "id": 70000,
-                            //     "istop": 0,
-                            //     "status": 0,
-                            //     "title": "贯彻研究驱动投资理念",
-                            //     "updateTime": 0,
-                            //     "updaterId": 0
-                            // }
-                        ],"pageNum":1,"pageSize":10,"totalPage":1
+                        "pageContent": [],"pageNum":1,"pageSize":10,"totalPage":1
                     },
                     "resultMessage": "操作成功"
                 }

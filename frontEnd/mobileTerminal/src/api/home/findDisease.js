@@ -3,46 +3,12 @@ import netAjax from '../net/net-ajax'
 import {develop, baseUrl} from '../../config'
 
 export default {
+
     /**
-     * 健康贴士文章
+     * 登录
      * @param data
      */
-    singleArticleRequest: function (data) {
-        if(develop) {
-            var def = $.Deferred();
-            setTimeout(function () {
-                var d = {
-                    "resultCode": 200,
-                    "resultJson": {
-                        "pageContent": [
-                        ],
-                    },
-                    "resultMessage": "操作成功"
-                }
-                def.resolve(d);
-            }, 100);
-            return def;
-        }else {
-            var def = $.Deferred();
-            netAjax.singleRequest({
-                url: baseUrl + '/user-server/user/login',
-                data:data,
-                type: 'POST',
-                success: function (d) {
-                    def.resolve(d)
-                },
-                error: function (d) {
-                    def.resolve(d)
-                }
-            })
-            return def;
-        }
-    },
-    /**
-     * 评论列表
-     * @param data
-     */
-     commentsRes: function (data) {
+    recommendRes: function (data) {
         if(develop) {
             var def = $.Deferred();
             setTimeout(function () {

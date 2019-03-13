@@ -9,9 +9,6 @@
                 <div class="main-article">
                     <div class="article-title">{{articleTitle}}</div>
                     <div class="article-time">{{articleTime}}</div>
-                    <div class="article-img">
-                        <img src="../../assets/images/banner1.jpg" alt="">
-                    </div>
                     <div class="article-con" v-html="articleCon"></div>
                 </div>
                 <div class="main-comment">
@@ -85,7 +82,7 @@ export default {
     components:{Layout},
     data() {
         return {
-            title:'',//页面标题
+            title:'健康贴士',//页面标题
             articleId:'',//文章ID
             articleTitle:'中药降压靠谱不靠谱？',//文章标题
             articleTime:'2018-03-26',//文章发布时间
@@ -227,14 +224,6 @@ export default {
         }
         .article-time{
             text-align: right;
-        }
-        .article-img{
-            img{
-                width:100%;
-                height:175px;
-            }
-            width:100%;
-            height:175px;
         }
         .article-con{
             font-size: 14px;

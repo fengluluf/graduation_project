@@ -2,7 +2,7 @@
     <div class="layout">
         <div class="headerBox"><slot name="header"></slot></div>
         <div class="mainBox" ref="main"><slot name="main"></slot></div>
-        <div class="footerBox"></div>
+        <div class="footerBox"><slot name="footer"></slot></div>
     </div>
 </template>
 
@@ -10,13 +10,6 @@
 
 export default {
     name:"Layout",
-    props:{
-        active:{
-            type:Number,
-            default: 0,
-            
-        }
-    },
     data() {
         return {
             
@@ -42,25 +35,6 @@ export default {
             this.$refs.main.style.marginTop = headerHeight + 'px';
             this.$refs.main.style.height = mainH;
         },
-        listUpload() {
-            if(this.allowLoadMore) {
-                this.newsListData.pageNo++;
-                this.editorNewsRequest();
-                this.allowLoadMore = false;
-            }
-            setTimeout(() => {
-                this.allowLoadMore = true
-            }, 2000);
-         },
-         changeTab(active){
-             console.log(active)
-         },
-        loadBottom() {
-            setTimeout(() => {
-                this.$emit('on-loadBottom');
-                this.$refs.loadmore.onBottomLoaded();
-            }, 200);
-        },
     },
 }
 </script>
@@ -71,6 +45,7 @@ export default {
     position: fixed;
     top: 0;
     width: 100%;
+    overflow: hidden;
 }
 .mainBox {
     background-color: #f5f7f8;

@@ -40,11 +40,10 @@ export default {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 16px;/*px*/
+    font-size: 18px;/*px*/
     margin:0;
     padding:0;
     height:100%;
-    /* overflow-y: auto; */
 }
 html, body {
     height: 100%;
