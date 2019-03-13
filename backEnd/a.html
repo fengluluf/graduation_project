@@ -15,25 +15,15 @@
 </body>
 <script src="jquery.min.js"></script>
 <script>
-  $.ajax({
+ 
+  $('.send').on('click',function(){
+    $.ajax({
     type:'get',
     url:'http://localhost:3000/users',
     success:function(res){
       console.log(res);
     }
   })
-  $('.send').on('click',function(){
-    $.ajax({
-      type:'post',
-      url:'http://localhost:3000/users/hh-login/send',
-      // dataType:'jsonp',
-      data:{
-        telNumber:$('input').val()
-      },
-      success:function(res){
-        console.log(res);
-      }
-    })
   })
   
   $('.put').on('click',function(){

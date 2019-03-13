@@ -7,7 +7,7 @@ const sql = require('../../service/drug');
 module.exports = router
 
   //药品分类展示
-  .post('/', function (req, res, next) {
+  .post('/drugShow', function (req, res, next) {
     sql.select('drugCate',req.body.cate)
       .then(function(d){
         if(d[0]){
