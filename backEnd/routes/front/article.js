@@ -48,11 +48,8 @@ module.exports = router
 
   //文章收藏
   .get('/articleCollect', function (req, res, next) {
-    // var collectId = req.query.collectId,
-    //     userId = req.query.userId;
-
-    var collectId = 1, //字符串
-      userId = 2;
+    var collectId = req.query.collectId,
+      userId = req.query.userId;
 
     uSql.select('id', userId)
       .then(function (d) {
@@ -73,10 +70,10 @@ module.exports = router
             uSql.update('collectId', middle, 'id', userId)
               .then(function (d) {
                 res.send({
-                  resultcode:'0000',
-                  data:{
-                    result:'01',
-                    text:'取消收藏成功'
+                  resultcode: '0000',
+                  data: {
+                    result: '01',
+                    text: '取消收藏成功'
                   }
                 })
               })
@@ -90,10 +87,10 @@ module.exports = router
           uSql.update('collectId', collectId, 'id', userId)
             .then(function (d) {
               res.send({
-                resultcode:'0000',
-                data:{
-                  result:'00',
-                  text:'收藏成功'
+                resultcode: '0000',
+                data: {
+                  result: '00',
+                  text: '收藏成功'
                 }
               })
               console.log(d);
@@ -111,11 +108,11 @@ module.exports = router
   })
 
   //发表文章
-  .get('/articlePush', function (req, res, next) {
+  .post('/articlePush', function (req, res, next) {
 
-    var articleName = req.body.data.articleName,
-      articleTxt = req.body.data.articleTxt,
-      userId = req.body.data.userId;
+    var articleName = req.body.articleName,
+      articleTxt = req.body.articleTxt,
+      userId = req.body.userId;
     var time = getNowFormatDate();
 
     //记录文章id
@@ -139,7 +136,13 @@ module.exports = router
           uSql.update('pushId', pushId, 'userId', userId)
             .then(function (d) {
               console.log(d);
-              res.send('success');
+              res.send({
+                resultcode:'0000',
+                data:{
+                  result:'00',
+                  text:"发表成功"
+                }
+              })
             })
             .catch(function (err) {
               console.log(err);
@@ -150,7 +153,13 @@ module.exports = router
           uSql.update('pushId', pushId2, 'userId', userId)
             .then(function (d) {
               console.log(d);
-              res.send('success');
+              res.send({
+                resultcode:'0000',
+                data:{
+                  result:'00',
+                  text:"发表成功"
+                }
+              })
             })
             .catch(function (err) {
               console.log(err);
@@ -177,14 +186,26 @@ module.exports = router
             }
           });
         } else {
+          var array = d[0].pushId.split('|'),
+            arrayObj = [];
+          for (var i = 0; i < array.length; i++) {
+            aSql.select('id', array[i])
+              .then(function (d) {
+                arrayObj.push(d[0]);
+              })
+              .catch(function (err) {
+                console.log(err);
+              });
+          }
+          console.log(arrayObj);
           res.send({
-            resultcode: '0000',
-            data: {
-              result: '00',
-              array: d[0].pushId.split('|'),
-              text: '查询成功'
+            resultcode:'0000',
+            data:{
+              result:'00',
+              text:'查询成功',
+              array:arrayObj
             }
-          });
+          })
         }
       })
       .catch(function (err) {
@@ -207,15 +228,25 @@ module.exports = router
             }
           });
         } else {
-          console.log(d[0].collectId.split('|'));
+          var array = d[0].collectId.split('|'),
+              arrayObj = [];
+          for(var i=0;i<array.length;i++){
+            aSql.select('id',array[i])
+              .then(function(d){
+                arrayObj.push(d[0]);
+              })
+              .catch(function(err){
+                console.log(err);
+              })
+          }
           res.send({
-            resultcode: '0000',
-            data: {
-              result: '00',
-              array: d[0].collectId.split('|'),
-              text: '查询成功'
+            resultcode:'0000',
+            data:{
+              result:'00',
+              text:'查询成功',
+              array:arrayObj
             }
-          });
+          })
         }
       })
       .catch(function (err) {

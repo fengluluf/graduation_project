@@ -10,7 +10,8 @@ const sql = require('../../service/user');
 module.exports = router
   //判断用户是否登录
   .get('/', async (req, res, next) => {
-    res.send('success');
+    console.log('---------------');
+    console.log(req.session);
     if (req.session.user) {
       res.send({
         resultcode: '0000',
@@ -32,9 +33,8 @@ module.exports = router
   })
 
   //注册发送验证码
-  .post('/hh-login/send', async (req, res, next) => {
+  .post('/send', async (req, res, next) => {
     var sendNumber = Math.floor(Math.random() * 1000000 + 1);
-    res.send('respond with a resource');
     //存储对象
     var user = {
       userNumber: req.body.userNumber,
@@ -57,24 +57,39 @@ module.exports = router
     request(queryUrl, function (error, response, body) {
       if (!error && response.statusCode == 200) {
         console.log(body) // 打印接口返回内容
-
         var jsonObj = JSON.parse(body); // 解析接口返回的JSON内容
         console.log(jsonObj)
+        res.send({
+          resultcode:'0000',
+          data:{
+            result:'00',
+            text:'发送成功'
+          }
+        })
       } else {
         console.log('请求异常');
+        res.send({
+          resultcode:'0000',
+          data:{
+            result:'01',
+            text:'发送失败'
+          }
+        })
       }
     })
+
+    
 
   })
 
   //注册进行校验信息
-  .post('/hh-login/register', async (req, res, next) => {
+  .post('/register', async (req, res, next) => {
     if (req.session.user) {
       var user = req.session.user,
         userName = req.body.userNumber,
         password = req.body.password;
       var sendNumber1 = user.sendNumber,
-        sendNumber2 = req.sendNumber;
+        sendNumber2 = req.body.sendNumber;
       if (sendNumber1 === sendNumber2) {
         //判断用户是否存在
         sql.select('username', userName)
@@ -129,7 +144,7 @@ module.exports = router
   })
 
   //用户登录
-  .post('/hh-login/login', async (req, res, next) => {
+  .post('/login', async (req, res, next) => {
     var userName = req.body.userNumber,
       password = req.body.password;
     
@@ -161,7 +176,11 @@ module.exports = router
               resultcode: '0000',
               data: {
                 result: '00',
-                text: '登陆成功'
+                text: '登陆成功',
+                userInfo:{
+                  userId:d[0].id,
+                  userNumber: req.body.userNumber
+                }
               }
             })
           }
