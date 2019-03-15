@@ -34,10 +34,18 @@ const router =  new Router({
             name:"tipsDetail",
             component: ()=>import('../service/home/tipsDetail.vue'),
         },
-        {   // 找药品
+        {   // 找药品-一级分类
             path: '/findDrugs',   
             name:"findDrugs",
             component: ()=>import('../service/home/findDrugs.vue'),
+            meta:{
+                keepAlive:true
+            }
+        },
+        {   // 找药品-二级分类
+            path: '/findDrugsSec',   
+            name:"findDrugsSec",
+            component: ()=>import('../service/home/findDrugsSec.vue'),
             meta:{
                 keepAlive:true
             }
@@ -47,10 +55,18 @@ const router =  new Router({
             name:"drugsDetail",
             component: ()=>import('../service/home/drugsDetail.vue'),
         },
-        {   // 查疾病
+        {   // 查疾病-一级分类
             path: '/findDisease',   
             name:"findDisease",
             component: ()=>import('../service/home/findDisease.vue'),
+            meta:{
+                keepAlive:true
+            }
+        },
+        {   // 查疾病-二级分类
+            path: '/findDiseaseSec',   
+            name:"findDiseaseSec",
+            component: ()=>import('../service/home/findDiseaseSec.vue'),
             meta:{
                 keepAlive:true
             }

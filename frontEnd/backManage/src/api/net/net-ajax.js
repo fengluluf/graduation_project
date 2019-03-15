@@ -1,10 +1,14 @@
 import $ from 'jquery'
-import {version} from '../../config'
+
+import {showMsg} from '../../util/base';
+import {baseUrl} from '../../config'
+
 
 export default {
     /****单条数据处理***/
     singleRequest:function (option){
         var laterTimer=3;
+        var _this=this;
         var op=$.extend({
             url:"",
             type:"post",
@@ -16,12 +20,13 @@ export default {
             success:null,
             complete:null,
             callBack:null,
+            callBackError:null,
             contentType: 'application/x-www-form-urlencoded',
             processData: true
         },option);
         $.ajax({
-            // url:op.url + '?version=' + version,
             url:op.url,
+            // headers: {'Cookie' : document.cookie },
             type:op.type,
             data:op.data,
             // dataType:op.dataType,
@@ -41,35 +46,28 @@ export default {
                 if(op.callBack&&typeof op.callBack==="function"){
                     op.callBack();
                 }
+                // layer.open({
+                //     content:"请求发送失败",
+                //     skin: 'msg',
+                //     time: laterTimer
+                // });
             },
             success:function (sucData) {
-                sucData = sucData && typeof sucData === 'string' ? JSON.parse(sucData) : sucData;
+                sucData = typeof sucData === 'string' ? JSON.parse(sucData) : sucData;
                 if(sucData.resultCode===200){
                    op.success(sucData);
-                }
-                else if(sucData.resultCode===500){
-                    Indicator.close();
-                    Toast({
-                        message: sucData.resultMessage,
-                    });
-                    op.success(sucData);
                 }else if(sucData.resultCode===403||sucData.resultCode===401){
-                    location.href = baseUrl+'/app/v'+version+'/index.html#/login';
-                    Toast({
-                        message: sucData.resultMessage,
-                    });
+                    location.href = baseUrl+'/admin/index.html#/login';
+                    showMsg(sucData.resultMessage);
                 }else{
-                    Indicator.close();
-                    Toast({
-                        message: sucData.resultMessage,
-                    });
+                    showMsg(sucData.resultMessage);
                 }
                 if(op.callBack&&typeof op.callBack==="function"){
                     op.callBack();
                 }
             },
             complete:function (d) {
-                d = d && typeof d === 'string' ? JSON.parse(d) : d;
+                d = typeof d === 'string' ? JSON.parse(d) : d;
                 if(op.complete&&typeof op.complete==="function"){
                     op.complete(d);
                 }
@@ -77,24 +75,4 @@ export default {
 
         });
     },
-    /****data 必须是数组 多条请求列队***/
-    multipleRequests:function (arr) {
-        var laterTimer=3;
-         if(arr&&arr.length>0){
-           var index=0;
-           arr[index].callBack=function () {
-                  index++;
-                 if(index<arr.length){
-                     netSever.singleRequest(arr[index]);
-                 }
-             }
-           netSever.singleRequest(arr[index]);
-        }else{
-             // layer.open({
-             //     content: "请使用单条请求",
-             //     skin: 'msg',
-             //     time: laterTimer
-             // });
-       }
-    }
 }
