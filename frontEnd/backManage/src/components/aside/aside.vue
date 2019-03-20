@@ -69,9 +69,29 @@ export default {
                         path:"/recList"
                     },
                     {
+                        title:"药品一级分类管理",
+                        icon:"",
+                        path:"/drugsManageFir"
+                    },
+                    {
+                        title:"药品二级分类管理",
+                        icon:"",
+                        path:"/drugsManageSec"
+                    },
+                    {
                         title:"药品列表",
                         icon:"",
                         path:"/drugsList"
+                    },
+                    {
+                        title:"疾病一级分类管理",
+                        icon:"",
+                        path:"/diseaseManageFir"
+                    },
+                    {
+                        title:"疾病二级分类管理",
+                        icon:"",
+                        path:"/diseaseManageSec"
                     },
                     {
                         title:"疾病列表",

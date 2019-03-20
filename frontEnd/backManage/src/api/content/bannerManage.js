@@ -21,15 +21,11 @@ export default {
                         "pageContent": [
                             {"date":'2019-03-13 12:00',"userName":"userName1","phoneNum":'12345678912'},
                             {"date":'2019-03-13 12:00',"userName":"userName2","phoneNum":'12345678912'},
-                            {"date":'2019-03-13 12:00',"userName":"userName3","phoneNum":'12345678912'},
-                            {"date":'2019-03-13 12:00',"userName":"userName4","phoneNum":'12345678912'},
                             {"date":'2019-03-13 12:00',"userName":"userName1","phoneNum":'12345678912'},
                             {"date":'2019-03-13 12:00',"userName":"userName2","phoneNum":'12345678912'},
-                            {"date":'2019-03-13 12:00',"userName":"userName3","phoneNum":'12345678912'},
-                            {"date":'2019-03-13 12:00',"userName":"userName4","phoneNum":'12345678912'},
                             {"date":'2019-03-13 12:00',"userName":"userName1","phoneNum":'12345678912'},
                             {"date":'2019-03-13 12:00',"userName":"userName2","phoneNum":'12345678912'},
-                            {"date":'2019-03-13 12:00',"userName":"userName3","phoneNum":'12345678912'},
+                            
                         ]
                     }
                 }

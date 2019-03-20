@@ -16,15 +16,30 @@
                     </el-date-picker>
                 </li>
                 <li>
-                    <span>分类</span>
-                    <el-select v-model="value" placeholder="请选择">
+                    <span>一级分类</span>
+                    <el-select v-model="searchData.drugsValueFir" placeholder="请选择" size="small">
                         <el-option
-                        v-for="item in drugsOptions"
+                        v-for="item in drugsOptionsFir"
                         :key="item.value"
                         :label="item.label"
                         :value="item.value">
                         </el-option>
                     </el-select>
+                </li>
+                <li>
+                    <span>二级分类</span>
+                    <el-select v-model="searchData.drugsValueSec" placeholder="请选择" size="small">
+                        <el-option
+                        v-for="item in drugsOptionsSec"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value">
+                        </el-option>
+                    </el-select>
+                </li>
+                <li>
+                    <span class="content-title">药品名称</span>
+                    <el-input type="text" size="small" placeholder="请输入内容" v-model="searchData.drugsName"> </el-input>
                 </li>
                 <li>
                     <el-button type="primary" size="small" @click="userSearchHandler">搜索</el-button>
@@ -41,9 +56,11 @@
             </div>
             <el-table v-model="loading" :data="tableData" style="width: 100%" border stripe size="small" @selection-change="handleSelectionChange" :height="tableListHeight">
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
-                <el-table-column  align="center" type="index" label="序号" width=""></el-table-column>
+                <el-table-column align="center" type="index" label="序号" width=""></el-table-column>
                 <el-table-column align="center" prop="date" label="药品发布时间" width="200"></el-table-column>
-                <el-table-column align="center" prop="articleName" label="药品标题" width="180"></el-table-column>
+                <el-table-column align="center" prop="drugsValueFir" label="药品一级分类" width="180"></el-table-column>
+                <el-table-column align="center" prop="drugsValueSec" label="药品二级分类" width="180"></el-table-column>
+                <el-table-column align="center" prop="name" label="药品名称" width="180"></el-table-column>
                 <el-table-column align="center" label="内容" width="180">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showItemHandler(scope.row)">详情</el-button>
@@ -67,15 +84,45 @@
             :total="pager.total">
         </el-pagination>
         <el-dialog title="添加药品" :visible.sync="dialogAddArticle" :before-close="handleClose">
-            <div class="article-content-dialog">
+            <div class="drugs-content-dialog">
                 <ul>
                     <li>
-                        <span class="content-title">标题</span>
-                        <el-input type="text" size="small" placeholder="请输入内容" v-model="article.name"></el-input>
+                        <span class="content-title">一级分类</span>
+                        <el-select v-model="drugs.drugsValueFir" placeholder="请选择" size="small">
+                            <el-option v-for="item in drugsOptionsFir" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
                     </li>
                     <li>
-                        <span class="content-title">内容</span>
-                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="article.con"> </el-input>
+                        <span class="content-title">二级分类</span>
+                        <el-select v-model="drugs.drugsValueSec" placeholder="请选择" size="small">
+                            <el-option v-for="item in drugsOptionsSec" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </li>
+                    <li>
+                        <span class="content-title">药品名称</span>
+                        <el-input type="text" size="small" placeholder="请输入内容" v-model="drugs.name"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">简介</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="drugs.introduction"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">适应症</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="drugs.indication"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">用量用法</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="drugs.dosage"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">注意事项</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="drugs.precaution"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">备注</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="drugs.remark"> </el-input>
                     </li>
                 </ul>
             </div>
@@ -85,15 +132,45 @@
             </span>
         </el-dialog>
         <el-dialog title="修改药品" :visible.sync="dialogUpdateArticle" :before-close="handleClose">
-            <div class="article-content-dialog">
+            <div class="drugs-content-dialog">
                 <ul>
-                    <li>
-                        <span class="content-title">标题</span>
-                        <el-input type="text" size="small" placeholder="请输入内容" v-model="modifyArticle.name"></el-input>
+                     <li>
+                        <span class="content-title">一级分类</span>
+                        <el-select v-model="modifyDrugs.drugsValueFir" placeholder="请选择" size="small">
+                            <el-option v-for="item in drugsOptionsFir" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
                     </li>
                     <li>
-                        <span class="content-title">内容</span>
-                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="modifyArticle.con"> </el-input>
+                        <span class="content-title">二级分类</span>
+                        <el-select v-model="modifyDrugs.drugsValueSec" placeholder="请选择" size="small">
+                            <el-option v-for="item in drugsOptionsSec" :key="item.value" :label="item.label" :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </li>
+                    <li>
+                        <span class="content-title">药品名称</span>
+                        <el-input type="text" size="small" placeholder="请输入内容" v-model="modifyDrugs.name"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">简介</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="modifyDrugs.introduction"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">适应症</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="modifyDrugs.indication"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">用量用法</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="modifyDrugs.dosage"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">注意事项</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="modifyDrugs.precaution"> </el-input>
+                    </li>
+                    <li>
+                        <span class="content-title">备注</span>
+                        <el-input type="textarea" size="small" placeholder="请输入内容" v-model="modifyDrugs.remark"> </el-input>
                     </li>
                 </ul>
             </div>
@@ -103,7 +180,42 @@
             </span>
         </el-dialog>
         <el-dialog title="药品详情" :visible.sync="dialogDetaileVisible">
-            <div v-html="articleDetaile" class="articleDetaile"></div>
+            <div class="drugsDetaile">
+                <ul>
+                    <li>
+                        <span class="detaile-title">一级分类</span>
+                        <span class="detaile-con">{{drugsDetaile.drugsValueFir}}</span>
+                    </li>
+                    <li>
+                        <span class="detaile-title">二级分类</span>
+                        <span class="detaile-con">{{drugsDetaile.drugsValueSec}}</span>
+                    </li>
+                    <li>
+                        <span class="detaile-title">药品名称</span>
+                        <span class="detaile-con">{{drugsDetaile.name}}</span>
+                    </li>
+                    <li>
+                        <div class="detaile-title" v-if="drugsDetaile.introduction">简介</div>
+                        <span class="detaile-con" v-html="drugsDetaile.introduction"></span>
+                    </li>
+                    <li>
+                        <div class="detaile-title" v-if="drugsDetaile.indication">适应症</div>
+                        <span class="detaile-con" v-html="drugsDetaile.indication"></span>
+                    </li>
+                    <li>
+                        <div class="detaile-title" v-if="drugsDetaile.dosage">用量用法</div>
+                        <span class="detaile-con" v-html="drugsDetaile.dosage"></span>
+                    </li>
+                    <li>
+                        <div class="detaile-title" v-if="drugsDetaile.precaution">注意事项</div>
+                        <span class="detaile-con" v-html="drugsDetaile.precaution"></span>
+                    </li>
+                    <li>
+                        <div class="detaile-title" v-if="drugsDetaile.remark">备注</div>
+                        <span class="detaile-con" v-html="drugsDetaile.remark"></span>
+                    </li>
+                </ul>
+            </div>
         </el-dialog>
     </div>
 </template>
@@ -129,11 +241,15 @@ export default {
             loading:true,//表格加载
             dialogAddArticle:false,//是否显示添加药品弹窗
             dialogUpdateArticle:false,//是否显示修改药品弹窗
-            article:{name:'',con:''},//添加的药品内容
-            modifyArticle:{},//修改的药品内容
+            drugs:{drugsValueFir:'',drugsValueSec:'',name:'',introduction:'',indication:'',dosage:'',precaution:'',remark:''},//添加的药品内容
+            modifyDrugs:{},//修改的药品内容
             dialogDetaileVisible:false,//是否显示详情弹窗
-            articleDetaile:'',//药品详情
-            drugsOptions:[{id:1,name:'drugsOptions'}],//药品分类
+            drugsDetaile:{},//药品详情
+            drugsOptionsFir:[{value:1,label:'drugsOptions'}],//一级药品分类
+            drugsValueFir:'',//当前被选中的value属性值
+            drugsOptionsSec:[{value:1,label:'drugsOptions'}],//二级药品分类
+            drugsValueSec:'',//当前被选中的value属性值
+
         }
     },
     created(){
@@ -171,25 +287,23 @@ export default {
         handleClose() {
             this.dialogAddArticle = false;
             this.dialogUpdateArticle = false;
-            this.article = {
-                name: '',
-                con: '',
+            this.drugs = {
+                drugsValueFir:'',drugsValueSec:'',name:'',introduction:'',indication:'',dosage:'',precaution:'',remark:''
             };
-            this.modifyArticle = {};
+            this.modifyDrugs = {};
         },
         //保存新增药品
         sendData(){
-            console.log(this.article.con)
+            console.log(this.drugs.con)
         },
         //取消新增或修改
         cancelData() {
             this.dialogAddArticle = false;
             this.dialogUpdateArticle = false;
-            this.article = {
-                name: '',
-                con: '',
+            this.drugs = {
+                drugsValueFir:'',drugsValueSec:'',name:'',introduction:'',indication:'',dosage:'',precaution:'',remark:''
             };
-            this.modifyArticle = {};
+            this.modifyDrugs = {};
         },
         //获取表格数据
         getTableData(){
@@ -217,11 +331,11 @@ export default {
         //点击详情
         showItemHandler(val){
             this.dialogDetaileVisible = true;
-            this.articleDetaile = val.articleCon
+            this.drugsDetaile = val
         },
         //修改推荐
         updateItemHandler(row,idx) {
-            this.modifyArticle = row;
+            this.modifyDrugs = row;
             this.dialogUpdateArticle = true;
         },
         //删除推荐
@@ -334,17 +448,23 @@ export default {
     bottom: 20px;
     right:20px;
 }
-.article-content-dialog ul li {
+.drugs-content-dialog ul li {
     display: flex;
     padding-bottom: 15px;
     align-items: center;
 }
-.article-content-dialog .content-title {
-    width: 60px;
+.drugs-content-dialog .content-title {
+    width: 70px;
 }
-.articleDetaile{
+.drugsDetaile{
     line-height: 25px;
     height: 400px;
     overflow-y: auto;
+}
+.drugsDetaile .detaile-title{
+    font-weight: bold;
+}
+.drugsDetaile .detaile-con{
+    margin-left: 20px;
 }
 </style>
