@@ -1,49 +1,62 @@
 const db = require('../db/config');
 let show = () => {
-  return new  Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     db.query('select * from drug', (err, rows) => {
-      if(err) {
+      if (err) {
         reject(err);
       }
       resolve(rows);
     })
   })
-}//显示全部 （select*）
+} //显示全部 （select*）
 
 let select = (attributename, attribute) => {
   return new Promise((resolve, reject) => {
     db.query(`select * from drug where ${attributename} = '${attribute}'`, (err, rows) => {
-      if(err) {
+      if (err) {
         reject(err);
       }
       resolve(rows);
     })
   })
-}//查询一行（传参)
+} //查询一行（传参)
 
-let update = (updateattributename, newdata,attributename,attribute) => {
+let update = (updateattributename, newdata, attributename, attribute) => {
   return new Promise((resolve, reject) => {
-    db.query(`update drug set ${updateattributename} = '${newdata}' where ${attributename} = '${attribute}'`,(err,rows) => {
-      if(err) {
+    db.query(`update drug set ${updateattributename} = '${newdata}' where ${attributename} = '${attribute}'`, (err, rows) => {
+      if (err) {
         reject(err);
       }
       resolve(rows);
     })
-  }) 
-}//修改
+  })
+} //修改
 
 let insert = (attributenames, attributes) => {
   return new Promise((resolve, reject) => {
-    db.query(`insert into drug (${attributenames}) values (${attributes})`, (err,rows) => {
-      if(err) {
+    db.query(`insert into drug (${attributenames}) values (${attributes})`, (err, rows) => {
+      if (err) {
         reject(err);
       }
       resolve(rows);
     })
   })
-}//增加
+} //增加
+
+let search = (txt) => {
+  return Promise((resolve, reject) => {
+    let param = ["%" + txt + "%"]
+    db.query(`select * from drug where drugName like ${param}`, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(rows);
+    })
+  })
+} //模糊查询
 
 exports.show = show
 exports.select = select
-exports.update =  update
+exports.update = update
 exports.insert = insert
+exports.search = search

@@ -197,4 +197,7 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       });
+  })
+  .get('/logins', async (req, res, next) =>{
+    res.send('success!');
   });
