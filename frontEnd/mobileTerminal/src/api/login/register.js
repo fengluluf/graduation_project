@@ -13,7 +13,7 @@ export default {
             var def = $.Deferred();
             setTimeout(function () {
                 var d = {
-                    resultCode: 200
+                    resultCode: "0000"
                 }
                 def.resolve(d);
             }, 100);
@@ -21,7 +21,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/user-server/user/login',
+                url: baseUrl + '/users/send',
                 data:data,
                 type: 'POST',
                 success: function (d) {
@@ -34,5 +34,34 @@ export default {
             return def;
         }
     },
-
+    /**
+     * 注册
+     * @param data
+     */
+    register: function (data) {
+        if(develop) {
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                    resultCode: "0000"
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
+        }else {
+            var def = $.Deferred();
+            netAjax.singleRequest({
+                url: baseUrl + '/users/register',
+                data:data,
+                type: 'POST',
+                success: function (d) {
+                    def.resolve(d)
+                },
+                error: function (d) {
+                    def.resolve(d)
+                }
+            })
+            return def;
+        }
+    },
 }

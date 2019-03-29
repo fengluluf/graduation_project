@@ -46,7 +46,7 @@
                 </li>
                 
                 <li>
-                    <el-button type="success" size="small" @click="addArticleHandler">添加药品</el-button>
+                    <el-button type="success" size="small" @click="addDrugsHandler">添加药品</el-button>
                 </li>
             </ul>
         </div>
@@ -83,7 +83,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pager.total">
         </el-pagination>
-        <el-dialog title="添加药品" :visible.sync="dialogAddArticle" :before-close="handleClose">
+        <el-dialog title="添加药品" :visible.sync="dialogAddDrugs" :before-close="handleClose">
             <div class="drugs-content-dialog">
                 <ul>
                     <li>
@@ -131,7 +131,7 @@
                 <el-button size="small" type="default" @click="cancelData()">取消</el-button>
             </span>
         </el-dialog>
-        <el-dialog title="修改药品" :visible.sync="dialogUpdateArticle" :before-close="handleClose">
+        <el-dialog title="修改药品" :visible.sync="dialogUpdateDrugs" :before-close="handleClose">
             <div class="drugs-content-dialog">
                 <ul>
                      <li>
@@ -239,8 +239,8 @@ export default {
             },
             tableListHeight:0,//表格高度
             loading:true,//表格加载
-            dialogAddArticle:false,//是否显示添加药品弹窗
-            dialogUpdateArticle:false,//是否显示修改药品弹窗
+            dialogAddDrugs:false,//是否显示添加药品弹窗
+            dialogUpdateDrugs:false,//是否显示修改药品弹窗
             drugs:{drugsValueFir:'',drugsValueSec:'',name:'',introduction:'',indication:'',dosage:'',precaution:'',remark:''},//添加的药品内容
             modifyDrugs:{},//修改的药品内容
             dialogDetaileVisible:false,//是否显示详情弹窗
@@ -280,13 +280,13 @@ export default {
         userSearchHandler(){
         },
         //添加药品
-        addArticleHandler() {
-            this.dialogAddArticle = true;
+        addDrugsHandler() {
+            this.dialogAddDrugs = true;
         },
         //关闭添加、修改弹窗
         handleClose() {
-            this.dialogAddArticle = false;
-            this.dialogUpdateArticle = false;
+            this.dialogAddDrugs = false;
+            this.dialogUpdateDrugs = false;
             this.drugs = {
                 drugsValueFir:'',drugsValueSec:'',name:'',introduction:'',indication:'',dosage:'',precaution:'',remark:''
             };
@@ -298,8 +298,8 @@ export default {
         },
         //取消新增或修改
         cancelData() {
-            this.dialogAddArticle = false;
-            this.dialogUpdateArticle = false;
+            this.dialogAddDrugs = false;
+            this.dialogUpdateDrugs = false;
             this.drugs = {
                 drugsValueFir:'',drugsValueSec:'',name:'',introduction:'',indication:'',dosage:'',precaution:'',remark:''
             };
@@ -336,7 +336,7 @@ export default {
         //修改推荐
         updateItemHandler(row,idx) {
             this.modifyDrugs = row;
-            this.dialogUpdateArticle = true;
+            this.dialogUpdateDrugs = true;
         },
         //删除推荐
         deleteItemHandler(){

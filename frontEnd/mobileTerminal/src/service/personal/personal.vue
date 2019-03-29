@@ -17,11 +17,15 @@
                             <input type="text" class='userName' v-model="userMsg.userName">
                         </span>
                     </div>
-                    <div class="listItemLast">
+                    <div class="listItem">
                         <span class="listCon">手机号</span>
                         <span class="goDetail">
                             <input type="text" class='userName' v-model="userMsg.phoneNum">
                         </span>
+                    </div>
+                    <div class="listItemLast" @click="goModifyPwd">
+                        <span class="listCon">密码</span>
+                        <span class="goDetail"><van-icon name="arrow" /></span>
                     </div>
                 </div>
                 <div class="list">
@@ -41,7 +45,7 @@
     </div>
 </template>
 <script>
-// import pageData from "../../api/personal/personal.js"
+import pageData from "../../api/personal/personal.js"
 import "../../assets/style/font-icon/iconfont.css"
 import Layout from "../../components/layout/layout.vue"
 import base from '../../util/base'
@@ -55,6 +59,7 @@ export default {
                 phoneNum:'13368982222',
                 headImg:'',
                 userName:'1111',
+                password:"123456"
             },
             rightText:'保存'
         }
@@ -71,6 +76,9 @@ export default {
         //修改个人信息进行保存
         onClickRight(){
 
+        },
+        goModifyPwd(){
+            this.$router.push("/modifyPwd")
         },
         goMycollect(){
             this.$router.push("/myCollect")

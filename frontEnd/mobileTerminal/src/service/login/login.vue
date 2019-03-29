@@ -4,7 +4,7 @@
         <div class="login-con">
             <div class="login-input">
                 <span class="iconfont icon-wode"></span>
-                <input type="number" placeholder="请输入手机号" class="input-txt" v-model="userName">
+                <input type="number" placeholder="请输入手机号" class="input-txt" v-model="userNumber">
             </div>
             <div class="login-input">
                 <span class="iconfont icon-suo"></span>
@@ -29,7 +29,7 @@ import base from '../../util/base'
 export default {
     data() {
         return {
-            userName: '',
+            userNumber: '',
             password: '',
             errorMsg:'',
             isShowPWD:false,//是否显示密码
@@ -51,10 +51,16 @@ export default {
         goRegister(){
             this.$router.push('/register');
         },
-        //校验用户名
+        //校验手机号
         checkName(){
-            if(this.userName === '') {
+            if(this.userNumber === '') {
                 this.errorMsg = '请输入手机号';
+                this.$dialog.alert({
+                    message: this.errorMsg
+                });
+                return false;
+            }else if(!base.checkPhone(this.userNumber)){
+                this.errorMsg = '请输入正确格式的手机号';
                 this.$dialog.alert({
                     message: this.errorMsg
                 });
@@ -78,18 +84,21 @@ export default {
         //登录
         login(){
             var _this = this;
-            _this.$router.push('/home');
             var data = {
-                userName: this.userName,
+                userNumber: this.userNumber,
                 password: this.password
             }
-            // if(this.checkName() && this.checkPwd()){
-            //     pageData.login(data).then(function (d) {
-            //         if(d.resultCode == 200) {
-            //             _this.$router.push('/home');
-            //         }
-            //     })
-            // }
+            if(this.checkName() && this.checkPwd()){
+                pageData.login(data).then(function (d) {
+                    if(d.data.result == "00") {
+                        _this.$router.push('/home');
+                    }else{
+                        _this.$dialog.alert({
+                            message: d.data.text
+                        });
+                    }
+                })
+            }
             
         },
     },

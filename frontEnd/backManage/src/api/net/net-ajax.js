@@ -14,7 +14,7 @@ export default {
             type:"post",
             // dataType:"json",
             data: {},
-            async: true,
+            async: false,
             beforeSend:null,
             error:null,
             success:null,
