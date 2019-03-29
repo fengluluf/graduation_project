@@ -18,21 +18,27 @@
       $.ajax({
         type: 'get',
         url: 'http://localhost:3000/backDrug/a',
+        xhrFields: {
+          //允许带上凭据
+          withCredentials: true
+        },
+        crossDomain: true,
         success: function (res) {
           console.log(res);
         }
       })
     })
 
-    $('button:eq(1)').on('click',function(){
+    $('button:eq(1)').on('click', function () {
       $.ajax({
-        type:'get',
-        url:'http://localhost:3000/backDrug/b',
-        success:function(res){
+        type: 'get',
+        url: 'http://localhost:3000/backDrug/b',
+        success: function (res) {
           console.log(res);
         }
       })
     })
+
   </script>
 
 </html>

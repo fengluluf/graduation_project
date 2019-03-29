@@ -41,10 +41,12 @@ app
   .use(express.static(path.join(__dirname, 'public')))
   // .use(bodyParser()) //解析post请求参数
   .use(async (req, res, next) => { //响应头设置
-    res.set("Access-Control-Allow-Origin", "*");
-    res.set("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS")
+    res.set("Access-Control-Allow-Origin", "http://localhost:8080");
+    res.set("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
+    // res.set("Access-Control-Allow-Headers", "X-Requested-With");
     res.set("Access-Control-Allow-Headers", "Content-Type");
     res.set("Access-Control-Allow-Credentials", "true");
+    // res.set("X-Powered-By",' 3.2.1');
     res.set("Content-Type", "application/json; charset=utf-8");
     await next();
   });

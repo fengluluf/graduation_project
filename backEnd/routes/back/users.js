@@ -8,7 +8,7 @@ const aSql = require('../../service/article');
 module.exports = router
   //判断用户是否登录
   .get('/', async (req, res, next) => {
-    if (JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user) {
+    if (req.session.user) {
       res.send({
         resultcode: '0000',
         data: {
@@ -80,8 +80,8 @@ module.exports = router
 
   //注册进行校验信息
   .post('/register', async (req, res, next) => {
-    if (JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user) {
-      var user = JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user,
+    if (req.session.user) {
+      var user = req.session.user,
         userName = req.body.userNumber,
         password = req.body.password;
       var sendNumber1 = user.sendNumber,
