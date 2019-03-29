@@ -14,7 +14,7 @@ module.exports = router
     // console.log(req.session[0]);
     // console.log(typeof(req.session));
     console.log('---------');
-    console.log(JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).ok);
+    console.log(JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user);
     console.log(req.session);
     console.log('-----------');
     res.send('success');
