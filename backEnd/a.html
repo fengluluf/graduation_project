@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+  </head>
+
+  <body>
+    <button>aaa</button>
+    <button>bbb</button>
+  </body>
+  <script src="./jquery.min.js"></script>
+  <script>
+    $('button:eq(0)').on('click', function () {
+      $.ajax({
+        type: 'get',
+        url: 'http://localhost:3000/backDrug/a',
+        success: function (res) {
+          console.log(res);
+        }
+      })
+    })
+
+    $('button:eq(1)').on('click',function(){
+      $.ajax({
+        type:'get',
+        url:'http://localhost:3000/backDrug/b',
+        success:function(res){
+          console.log(res);
+        }
+      })
+    })
+  </script>
+
+</html>
