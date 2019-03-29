@@ -102,6 +102,11 @@ const router =  new Router({
                 needTab:true
             }
         },
+        {   // 修改密码
+            path: '/modifyPwd',   
+            name:"modifyPwd",
+            component: ()=>import('../service/personal/modifyPwd.vue'),
+        },
         {   // 我的收藏
             path: '/myCollect',   
             name:"myCollect",

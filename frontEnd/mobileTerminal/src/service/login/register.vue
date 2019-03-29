@@ -7,12 +7,12 @@
         <div class="register-con">
             <div class="register-input numBox">
                 <span class="iconfont icon-shouji"></span>
-                <input type="number" placeholder="请输入手机号" class="input-txt" v-model="phoneNum">
+                <input type="number" placeholder="请输入手机号" class="input-txt" v-model="phoneNum" @blur="checkNum">
             </div>
             
             <div class="register-input pwdBox">
                 <span class="iconfont icon-suo"></span>
-                <input :type="isShowPWD?'text':'password'" placeholder="请输入密码" class="input-txt" v-model="password">
+                <input :type="isShowPWD?'text':'password'" placeholder="密码长度应为6-12位" class="input-txt" v-model="password">
                 <span :class="['iconfont',isShowPWD?'icon-yanjing':'icon-yanjing1']" @click="switchAttr" id="eye"></span>
             </div>
             <div class="register-input verBox">
@@ -22,7 +22,7 @@
             </div>
         </div>
         <div class="register-btn">
-            <button>注册</button>
+            <button @click="register">注册</button>
         </div>
     </div>
 </template>
@@ -52,6 +52,18 @@ export default {
         goBack(){
             this.$router.back();
         },
+        //失去焦点时验证手机号
+        checkNum(){
+            if(!base.checkPhone(this.phoneNum)){
+                this.errorMsg = '请正确的手机号';
+                this.$dialog.alert({
+                    message: this.errorMsg
+                });
+                return false;
+            }else{
+                return true;
+            }
+        },
         //密码是否可见
         switchAttr(){
             this.isShowPWD = !this.isShowPWD
@@ -77,23 +89,49 @@ export default {
         getVer(){
             var _this = this;
             var data={
-                phoneNum: this.phoneNum,
-                password: this.password
+                userNumber: this.phoneNum,
             }
-            if(this.phoneNum && base.checkPhone(this.phoneNum)){
-                pageData.getVer(data).then(function (d) {
-                    if(d.resultCode == 200) {
-                        _this.setSendTime()
-                    }
-                })           
-            }else{
+            if(!base.checkPhone(this.phoneNum)){
                 this.errorMsg = '请正确的手机号';
                 this.$dialog.alert({
                     message: this.errorMsg
                 });
                 return false;
+            }else{
+                pageData.getVer(data).then(function (d) {
+                    if(d.data.result == "00") {
+                        _this.setSendTime()
+                    }else{
+                        _this.$dialog.alert({
+                            message: d.data.text
+                        });
+                    }
+                })
             }
-        }
+        },
+        //点击注册
+        register(){
+            var _this = this;
+            var data = {
+                userNumber:this.phoneNum,
+                password:this.password,
+                sendNumber:this.verification
+            }
+            if(12<this.password.length||this.password.length<6){
+                this.$dialog.alert({
+                    message:"密码长度应为6-12位"
+                })
+                return false;
+            }else{
+                pageData.register(data).then(function(d){
+                    if(d.resultcode == "0000"){
+                        _this.$dialog.alert({
+                            message: d.data.text
+                        });
+                    }
+                })
+            }
+        },
     }
 }
 </script>

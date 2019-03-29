@@ -1,12 +1,4 @@
 export default{
-    getCookie(name)
-    {
-        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-        if(arr=document.cookie.match(reg))
-            return (arr[2]);
-        else
-            return null;
-    },
     
     /**
      * 将时间戳格式化日期格式
