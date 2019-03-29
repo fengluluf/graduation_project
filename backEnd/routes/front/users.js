@@ -12,23 +12,24 @@ module.exports = router
   .get('/', async (req, res, next) => {
     console.log('---------------');
     console.log(req.session);
-    if (JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user) {
-      res.send({
-        resultcode: '0000',
-        data: {
-          result: '00',
-          text: '已登录'
-        }
-      });
-    } else {
-      res.send({
-        resultcode: '0000',
-        data: {
-          result: '11',
-          text: '未登录'
-        }
-      });
-    }
+    res.send('success');
+    // if (JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user) {
+    //   res.send({
+    //     resultcode: '0000',
+    //     data: {
+    //       result: '00',
+    //       text: '已登录'
+    //     }
+    //   });
+    // } else {
+    //   res.send({
+    //     resultcode: '0000',
+    //     data: {
+    //       result: '11',
+    //       text: '未登录'
+    //     }
+    //   });
+    // }
     console.log('success');
   })
 
@@ -84,8 +85,7 @@ module.exports = router
 
   //注册进行校验信息
   .post('/register', async (req, res, next) => {
-    if (JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user) {
-      var user = JSON.parse(JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user),
+      var user = req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]].user,
         userName = req.body.userNumber,
         password = req.body.password;
       var sendNumber1 = user.sendNumber,
