@@ -12,7 +12,7 @@ module.exports = router
   .get('/', async (req, res, next) => {
     console.log('---------------');
     console.log(req.session);
-    if (req.session.user) {
+    if (JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user) {
       res.send({
         resultcode: '0000',
         data: {
@@ -84,8 +84,8 @@ module.exports = router
 
   //注册进行校验信息
   .post('/register', async (req, res, next) => {
-    if (req.session.user) {
-      var user = req.session.user,
+    if (JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user) {
+      var user = JSON.parse(JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user),
         userName = req.body.userNumber,
         password = req.body.password;
       var sendNumber1 = user.sendNumber,
