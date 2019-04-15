@@ -15,7 +15,7 @@ module.exports = router
       .then(function (d) {
         if (d[0]) {
           res.send({
-            result: '0000',
+            resultcode: '0000',
             data: {
               result: '00',
               text: '查询成功',
