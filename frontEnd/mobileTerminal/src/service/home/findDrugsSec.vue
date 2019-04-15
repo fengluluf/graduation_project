@@ -17,7 +17,6 @@
                                     <div class="drugsEfficacy">{{item.efficacy}}</div>
                                 </div>
                             </van-list>
-                            
                         </van-tab>
                     </van-tabs>
                 </div>
@@ -131,21 +130,21 @@ export default {
     },
 }
 </script>
-<style scoped lang="less">
+<style lang="less">
 .header{
-    box-shadow:0 2px 1px 0px rgba(0,0,0,0.10);/*no*/
+    // box-shadow:0 2px 1px 0px rgba(0,0,0,0.10);/*no*/
 }
 .van-icon{
-    color:#28b8a1
+    color:#28b8a1!important
 }
 .main{
     .mian-sort{
-        margin-top:10px;
         background-color: #fff;
         color: #7d7e80;
-        .van-tabs__wrap{
+        .van-tabs--line .van-tabs__wrap{
             position: fixed!important;
-            top:56px!important;
+            top: 45px!important;
+            box-shadow:0 2px 1px 0px rgba(0,0,0,0.10);
         }
         .van-list__finished-text{
             background-color:#f5f7f8

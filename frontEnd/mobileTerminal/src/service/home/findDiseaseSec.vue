@@ -89,16 +89,18 @@ export default {
     },
 }
 </script>
-<style scoped lang="less">
-.header{
-    box-shadow:0 2px 1px 0px rgba(0,0,0,0.10);/*no*/
-}
+<style lang="less">
 .van-icon{
-    color:#28b8a1
+    color:#28b8a1!important;
 }
 .van-collapse-item__content{
-            padding:0 15px !important;
-        }
+    padding:0 15px !important;
+}
+.van-tabs--line .van-tabs__wrap{
+    position: fixed!important;
+    top: 45px!important;
+    box-shadow:0 2px 1px 0px rgba(0,0,0,0.10);
+}
 .main{
     .mian-sort{
         margin-top:10px;
@@ -114,7 +116,7 @@ export default {
             padding:5px 10px;
             border-bottom: 1px solid #f5f7f8;
             .diseaseName{
-                font-size: 16px;
+                font-size: 14px;
                 color: #000;
             }
         }

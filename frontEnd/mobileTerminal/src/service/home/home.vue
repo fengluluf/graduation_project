@@ -3,8 +3,8 @@
         <Layout :active="active">
             <div slot="header">
                 <div class="header-search">
-                    <van-search v-model="searchTxt" placeholder="搜索症状\疾病\药品" show-action shape="round" @search="onSearch">
-                        <div slot="action" @click="onSearch" class="searchBtn">搜索</div>
+                    <van-search v-model="searchTxt" placeholder="搜索贴士\疾病\药品" shape="round" @search="onSearch" @focus="onSearch">
+                        <!-- <div slot="action" @click="onSearch" class="searchBtn">搜索</div> -->
                     </van-search>
                 </div>
             </div>
@@ -97,7 +97,7 @@ export default {
     methods: {
         //确定搜索
         onSearch(){
-
+            this.$router.push("/search")
         },
         //滚动条与底部距离小于 offset 时触发
         listUpload(){
