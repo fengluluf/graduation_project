@@ -94,9 +94,8 @@ module.exports = router
   })
 
   //药品查询
-  .get('/searchDrug', function (req, res, next) {
-    console.log(req.query);
-    var str = req.query.str;
+  .post('/searchDrug', function (req, res, next) {
+    var str = req.body.str;
     sql3.search(str)
       .then(function (d) {
         console.log(d);
