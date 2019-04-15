@@ -2,68 +2,124 @@ var express = require('express');
 var router = express.Router();
 
 const sql = require('../../service/drug');
+const sql1 = sql.drugcate;
+const sql2 = sql.drugcate2;
+const sql3 = sql.drug;
 
 /* GET home page. */
 module.exports = router
 
-  //药品分类展示
-  .post('/drugShow', function (req, res, next) {
-    sql.select('drugCate',req.body.cate)
-      .then(function(d){
-        if(d[0]){
+  //药品一级分类
+  .get('/getFirst', function (req, res, next) {
+    sql1.show()
+      .then(function (d) {
+        if (d[0]) {
           res.send({
-            result:'0000',
-            data:{
-              result:'00',
-              text:'查询成功',
-              array:d
+            result: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d
             }
-          })          
-        }else{
+          })
+        } else {
           res.send({
-            resultcode:'0000',
-            data:{
-              result:'01',
-              text:'无此分类药品'
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无此分类药品'
             }
           })
         }
       })
-      .catch(function(err){
+      .catch(function (err) {
+        console.log(err);
+      });
+  })
+
+  //药品二级分类
+  .post('/getSecond', function (req, res, next) {
+    sql2.select('drugcate', req.body.drugcate)
+      .then(function (d) {
+        if (d[0]) {
+          res.send({
+            result: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d
+            }
+          })
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无此分类药品'
+            }
+          })
+        }
+      })
+      .catch(function (err) {
         console.log(err);
       });
   })
 
   //药品详情页
-  .get('/drugInfo',function(req,res,next){
-    sql.select('drugId',req.body.drugId)
-      .then(function(d){
-        if(d[0]){
+  .post('/drugInfo', function (req, res, next) {
+    sql3.select('id', req.body.id)
+      .then(function (d) {
+        if (d[0]) {
           res.send({
-            result:'0000',
-            data:{
-              result:'00',
-              text:'查询成功',
-              array:d[0]
+            result: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d[0]
             }
-          })          
-        }else{
+          })
+        } else {
           res.send({
-            resultcode:'0000',
-            data:{
-              result:'01',
-              text:'无此药品'
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无此药品'
             }
           })
         }
       })
-      .catch(function(err){
+      .catch(function (err) {
         console.log(err);
       });
   })
 
   //药品查询
-  .get('/indexBanner',function(req,res,next){
+  .get('/searchDrug', function (req, res, next) {
     console.log(req.query);
-    res.send('success');
+    var str = req.query.str;
+    sql3.search(str)
+      .then(function (d) {
+        console.log(d);
+        if (d.length != 0) {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              arr: d
+            }
+          })
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无查询结果'
+            }
+          })
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      })
   });

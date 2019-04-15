@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var session = require('express-session');
+var cors = require('cors');
 
 var indexRouter = require('./routes/front/index');
 var usersRouter = require('./routes/front/users');
@@ -22,15 +23,6 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(session({
-  secret: 'keyboard cat',
-  resave: true,
-  saveUninitialized: true,
-  cookie: {
-    maxAge : 1000 * 60 * 3,
-  }
-}));
-
 app
   .use(logger('dev'))
   .use(express.json())
@@ -38,6 +30,16 @@ app
     extended: false
   }))
   .use(cookieParser())
+  .use(session({
+    secret: 'xingjl',
+    resave: false,//每次请求重新设置session cookie
+    saveUninitialized: true,
+    cookie: {
+      // secure: true,
+      maxAge: 1000 * 60 * 10,
+    },
+    user:null
+  }))
   .use(express.static(path.join(__dirname, 'public')))
   // .use(bodyParser()) //解析post请求参数
   .use(async (req, res, next) => { //响应头设置
@@ -48,20 +50,36 @@ app
     res.set("Access-Control-Allow-Credentials", "true");
     // res.set("X-Powered-By",' 3.2.1');
     res.set("Content-Type", "application/json; charset=utf-8");
+    // res.setHeader("Set-Cookie", ["sid="+newUser.toCookie()+";path=/;domain="+config.domain+";expires="+new Date("2030") ]);
     await next();
   });
-  
+
+// app.use(cors({
+//   origin: 'http://locahost:8080',
+//   credentials: true
+// }));
+
+app.use(function (req, res, next) {
+  console.log('11111111111111',req.session.user);
+  res.locals.user = req.session.user;
+  var err = req.session.error;
+  res.locals.message = '';
+  if (err) res.locals.message = '<div style="margin-bottom: 20px;color:red;">' + err + '</div>';
+  next();
+});
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/article', articleRouter);
-app.use('/drug',drugRouter);
-app.use('/disease',diseaseRouter);
+app.use('/drug', drugRouter);
+app.use('/disease', diseaseRouter);
 
-app.use('/backUsers',usersBackRouter);
-app.use('/backArticle',articleBackRouter);
-app.use('/backDrug',drugBackRouter);
-app.use('/backDisease',diseaseBackRouter);
+app.use('/backUsers', usersBackRouter);
+app.use('/backArticle', articleBackRouter);
+app.use('/backDrug', drugBackRouter);
+app.use('/backDisease', diseaseBackRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

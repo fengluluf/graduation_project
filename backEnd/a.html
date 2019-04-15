@@ -11,6 +11,11 @@
   <body>
     <button>aaa</button>
     <button>bbb</button>
+
+    <input type="text" placeholder="用户名">
+    <input type="text" placeholder="密码">
+    <button class="submit">提交</button>
+    <button class="submitt">注册</button>
   </body>
   <script src="./jquery.min.js"></script>
   <script>
@@ -34,6 +39,33 @@
         type: 'get',
         url: 'http://localhost:3000/backDrug/b',
         success: function (res) {
+          console.log(res);
+        }
+      })
+    })
+
+    $('.submit').on('click',function(){
+      $.ajax({
+        type:'post',
+        url:'http://localhost:3000/users',
+        data:{
+          sessionID:localStorage.getItem('key')
+        },
+        success:function(res){
+          console.log(res);
+        }
+      })
+    })
+    $('.submitt').on('click',function(){
+      $.ajax({
+        type:'post',
+        url:'http://localhost:3000/users/logins',
+        data:{
+          userNumber:'15732115283',
+          password:'admin'
+        },
+        success:function(res){
+          localStorage.setItem('key',res.sessionID);
           console.log(res);
         }
       })
