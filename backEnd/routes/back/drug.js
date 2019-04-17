@@ -15,42 +15,124 @@ module.exports = router
   .get('/getFirst', async (req, res, next) => {
     sql1.show()
       .then(function (d) {
-        console.log(d);
-        arr = d;
-        res.send(d);
+        if (d[0]) {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d
+            }
+          })
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无此分类药品'
+            }
+          })
+        }
       })
       .catch(function (err) {
         console.log(err);
-      })
-    // res.send('000');
+      });
   })
   //获取二级分类
   .post('/getSecond', async (req, res, next) => {
     sql2.select('drugcate', req.body.drugcate)
       .then(function (d) {
-        console.log(d);
-        res.send(d);
+        if (d[0]) {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d
+            }
+          })
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无此分类药品'
+            }
+          })
+        }
       })
       .catch(function (err) {
         console.log(err);
-      })
+      });
   })
   //获取三级分类
   .post('/getThird', async (req, res, next) => {
     sql3.select('drugCate2', req.body.drugcate2)
       .then(function (d) {
-        res.send(d);
+        if (d[0]) {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d[0]
+            }
+          })
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无此药品'
+            }
+          })
+        }
       })
       .catch(function (err) {
         console.log(err);
       })
   })
+
+  //药品详情页
+  .post('/drugInfo', function (req, res, next) {
+    sql3.select('id', req.body.id)
+      .then(function (d) {
+        if (d[0]) {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d[0]
+            }
+          })
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无此药品'
+            }
+          })
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  })
+
   //增加一级分类
   .post('/addFirst', async (req, res, next) => {
     sql1.insert('drugname', req.body.drugname)
       .then(function (d) {
-        console.log(d);
-        res.send('success');
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '增加成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
@@ -60,8 +142,14 @@ module.exports = router
   .post('/addSecond', async (req, res, next) => {
     sql2.insert(['drugcate', 'drugname'], [req.body.drugcate, req.body.drugname])
       .then(function (d) {
-        console.log(d);
-        res.send('success');
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '增加成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
@@ -72,8 +160,14 @@ module.exports = router
   .post('/add', async (req, res, next) => {
     sql3.insert([drugCate, drugCate2, drugName, drugTxt, drugUsage, drugAtten], [req.body.drugcate, req.body.drugCate2, req.body.drugname, req.body.drugTxt, req.body.drugUsage, req.body.drugAtten])
       .then(function (d) {
-        console.log(d);
-        res.send('success');
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '增加成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
@@ -98,7 +192,14 @@ module.exports = router
       })
     sql3.deletes('drugCate', req.body.id)
       .then(function (d) {
-        console.log(d);
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '删除成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
@@ -117,7 +218,14 @@ module.exports = router
       })
     sql3.deletes('drugCate2', req.body.id)
       .then(function (d) {
-        console.log(d);
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '删除成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
@@ -128,7 +236,14 @@ module.exports = router
   .post('/delete', async (req, res, next) => {
     sql3.deletes('id', req.body.id)
       .then(function (d) {
-        console.log(d);
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '删除成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
@@ -139,32 +254,50 @@ module.exports = router
   .post('/updateFirst', async (req, res, next) => {
     sql1.update('drugname', req.body.drugname, 'id', req.body.id)
       .then(function (d) {
-        console.log(d);
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '更改成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
       })
-    res.send('success');
   })
   //更改二级分类
   .post('/updateSecond', async (req, res, next) => {
     sql2.update(req.body.updatename, req.body.newdata, 'id', req.body.id)
       .then(function (d) {
-        console.log(d);
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '更改成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
       })
-    res.send('success');
   })
   //更改药品信息
   .post('/update', async (req, res, next) => {
     sql3.update(req.body.updatename, req.body.newdata, 'id', req.body.id)
       .then(function (d) {
-        console.log(d);
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '更改成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
       })
-    res.send('success');
   });

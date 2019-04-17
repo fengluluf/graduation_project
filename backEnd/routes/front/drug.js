@@ -43,7 +43,7 @@ module.exports = router
       .then(function (d) {
         if (d[0]) {
           res.send({
-            result: '0000',
+            resultcode: '0000',
             data: {
               result: '00',
               text: '查询成功',
@@ -65,13 +65,41 @@ module.exports = router
       });
   })
 
+  //获取三级分类
+  .post('/getThird', async (req, res, next) => {
+    sql3.select('drugCate2', req.body.drugcate2)
+      .then(function (d) {
+        if (d[0]) {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d
+            }
+          })
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无此分类药品'
+            }
+          })
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      })
+  })
+
   //药品详情页
   .post('/drugInfo', function (req, res, next) {
     sql3.select('id', req.body.id)
       .then(function (d) {
         if (d[0]) {
           res.send({
-            result: '0000',
+            resultcode: '0000',
             data: {
               result: '00',
               text: '查询成功',
