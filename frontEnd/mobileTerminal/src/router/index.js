@@ -57,9 +57,6 @@ const router = new Router({
             name: "findDrugsSec",
             component: () =>
                 import ('../service/home/findDrugsSec.vue'),
-            meta: {
-                keepAlive: true
-            }
         },
         { // 药品详情
             path: '/drugsDetail',

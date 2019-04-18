@@ -124,7 +124,7 @@ export default {
                 return false;
             }else{
                 pageData.register(data).then(function(d){
-                    if(d.resultcode == "0000"){
+                    if(d.resultcode == "000"){
                         _this.$dialog.alert({
                             message: d.data.text
                         });

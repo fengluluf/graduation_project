@@ -5,7 +5,7 @@ import {develop, baseUrl} from '../../config'
 export default {
 
     /**
-     * 登录
+     * 药品一级分类
      * @param data
      */
      drugsRes: function (data) {
@@ -13,38 +13,7 @@ export default {
             var def = $.Deferred();
             setTimeout(function () {
                 var d = {
-                    "resultCode": 200,
-                    "resultJson": {
-                        "pageContent": [
-                            // {
-                            //     "concernCount": 0,
-                            //     "content": "美国",
-                            //     "createDate": "2018-12-03 10:17:22",
-                            //     "createTime": 1543803442505,
-                            //     "editorId": 1,
-                            //     "id": 80002,
-                            //     "istop": 0,
-                            //     "status": 0,
-                            //     "title": "美国",
-                            //     "updateTime": 0,
-                            //     "updaterId": 0
-                            // },
-                            // {
-                            //     "concernCount": 0,
-                            //     "content": "贯彻研究驱动投资理念",
-                            //     "createDate": "2018-12-01 21:21:32",
-                            //     "createTime": 1543670492804,
-                            //     "editorId": 1,
-                            //     "id": 70000,
-                            //     "istop": 0,
-                            //     "status": 0,
-                            //     "title": "贯彻研究驱动投资理念",
-                            //     "updateTime": 0,
-                            //     "updaterId": 0
-                            // }
-                        ],"pageNum":1,"pageSize":10,"totalPage":1
-                    },
-                    "resultMessage": "操作成功"
+                    "resultcode":"0000","data":{"result":"00","text":"查询成功","array":[{"id":1,"drugname":"抗感染类药物"},{"id":2,"drugname":"心血管系统药物"},{"id":3,"drugname":"消化系统用药"},{"id":4,"drugname":"呼吸系统药物"},{"id":5,"drugname":"神经系统用药"},{"id":6,"drugname":"治疗精神障碍药物"},{"id":7,"drugname":"镇痛、解热、抗炎、抗痛风药"}]}
                 }
                 def.resolve(d);
             }, 100);
@@ -52,9 +21,9 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/user-server/user/login',
+                url: baseUrl + '/drug/getFirst',
                 data:data,
-                type: 'POST',
+                type: 'GET',
                 success: function (d) {
                     def.resolve(d)
                 },
