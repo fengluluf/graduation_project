@@ -2,7 +2,7 @@
     <div class="drugsDetail">
         <Layout>
             <div slot="header" class="header">
-                <van-nav-bar :title="drugsDetail.title"  @click-left="onClickLeft" left-arrow></van-nav-bar>
+                <van-nav-bar :title="drugsDetail.drugName"  @click-left="onClickLeft" left-arrow></van-nav-bar>
             </div>
             <div slot="main" class="main">
                 <!-- <div class="drugs-title">{{drugsDetail.title}}</div> -->
@@ -34,7 +34,7 @@
     </div>
 </template>
 <script>
-// import pageData from "../../api/home/drugsDetail.js"
+import pageData from "../../api/home/drugsDetail.js"
 import "../../assets/style/font-icon/iconfont.css"
 import Layout from "../../components/layout/layout1.vue"
 import base from '../../util/base'
@@ -49,13 +49,28 @@ export default {
         }
     },
     created() {
-        
+        this.getDrugDetail();
     },
     methods: {
         //返回上一级
         onClickLeft(){
             this.$router.go(-1)
         },
+        getDrugDetail(){
+            var _this = this;
+            var data = {id:this.$route.query.id}
+            pageData.getDrugDetail(data).then(function(res){
+                if(res.resultcode == "0000"){
+                    if(res.data.result == "00"){
+                        _this.drugsDetail = res.data.array
+                    }else{
+                        _this.$toast(res.data.text);
+                    }
+                }else{
+                    _this.$toast(res.data.text);
+                }
+            })
+        }
     },
 }
 </script>

@@ -5,17 +5,24 @@ import {develop, baseUrl} from '../../config'
 export default {
 
     /**
-     * 查询
+     * 药品详情查询
      * @param data
      */
-    searchDrug: function (data) {
+    //药品详情查询
+    getDrugDetail: function (data) {
         if(develop) {
-            
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/drug/searchDrug',
-                data:data,
+                url: baseUrl + '/drug/drugInfo',
+                data: data,
                 type: 'POST',
                 success: function (d) {
                     def.resolve(d)

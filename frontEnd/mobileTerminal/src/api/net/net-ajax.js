@@ -44,7 +44,10 @@ export default {
                 sucData = sucData && typeof sucData === 'string' ? JSON.parse(sucData) : sucData;
                 if(sucData.resultcode==="0000"){
                    op.success(sucData);
-                }else{
+                }else if(sucData.result==="0000"){
+                    op.success(sucData);
+                }
+                else{
                     Dialog.alert({
                         message: sucData.data.text
                     }).then(() => {
