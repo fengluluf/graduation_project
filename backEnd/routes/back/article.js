@@ -18,15 +18,18 @@ module.exports = router
   .get('/getArticle',async(req,res,next)=>{
     aSql.show()
       .then(function(d){
-        console.log(d);
+        res.send({
+          resultcode:'0000',
+          data: {
+            result: '00',
+            text: '获取成功',
+            array:d
+          }
+        })
       })
       .catch(function(err){
         console.log(err);
       })
-    res.send({
-      resultcode:'0000',
-      result:'查询成功'
-    });
   })
 
   //删除文章
@@ -51,7 +54,13 @@ module.exports = router
       pushId = pushId.join('|');
        uSql.update('pushId',pushId,'id',d[0].id)
         .then(function(d){
-          console.log('success');
+          res.send({
+            resultcode:'0000',
+            data: {
+              result: '00',
+              text: '删除成功',
+            }
+          })
         })
         .catch(function(err){
           console.log(err);
@@ -61,22 +70,39 @@ module.exports = router
      .catch(function(err){
        console.log(err);
      })
-    res.send({
-      resultcode:'0000',
-      result:'删除成功'
-    });
   })
 
   //按用户id查询文章
-  .get('/deleteArticle',async(req,res,next)=>{
-    console.log(res);
-    console.log(res.session);
-    res.send('success');
+  .post('/searchchArticle',async(req,res,next)=>{
+    aSql.select('userId',req.body.userId)
+      .then(function(d){
+        res.send({
+          resultcode:'0000',
+          data: {
+            result: '00',
+            text: '查询成功',
+            array: d
+          }
+        })
+      })
   })
 
   //按时间查询文章
-  .get('/deleteArticle',async(req,res,next)=>{
-    console.log(res);
-    console.log(res.session);
-    res.send('success');
+  .post('/timeArticle',async(req,res,next)=>{
+    var startTime = req.body.startTime,
+        endTime = req.body.endTime;
+    aSql.time(startTime,endTime)
+      .then(function(d){
+        res.send({
+          resultcode:'0000',
+          data:{
+            result:'00',
+            text:'查询成功',
+            array:d
+          }
+        })
+      })
+      .catch(function(err){
+        console.log(err);
+      })
   });

@@ -65,9 +65,65 @@ module.exports = router
         console.log(err);
       });
   })
+
+  //获取全部二级分类
+  .get('/getallSecond', async (req, res, next) => {
+    sql2.show()
+      .then(function (d) {
+        if (d[0]) {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d
+            }
+          })
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '查询失败'
+            }
+          })
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  })
   //获取三级分类
   .post('/getThird', async (req, res, next) => {
     sql3.select('drugCate2', req.body.drugcate2)
+      .then(function (d) {
+        if (d[0]) {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '查询成功',
+              array: d[0]
+            }
+          })
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '无此药品'
+            }
+          })
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      })
+  })
+
+  //获取全部三级分类
+  .get('/getallThird', async (req, res, next) => {
+    sql3.show()
       .then(function (d) {
         if (d[0]) {
           res.send({

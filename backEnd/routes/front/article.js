@@ -58,7 +58,7 @@ module.exports = router
   .post('/articleCollect', function (req, res, next) {
     var collectId = req.body.collectId,
       userId = req.body.userId;
-
+    
     uSql.select('id', userId)
       .then(function (d) {
         //判断是否是第一次存储
@@ -187,7 +187,7 @@ module.exports = router
           res.send({
             resultcode: '0000',
             data: {
-              result: '00',
+              result: '01',
               text: '发表文章为空'
             }
           });

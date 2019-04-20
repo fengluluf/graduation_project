@@ -55,8 +55,20 @@ let deletes = (attributenames, attributes) => {
   })
 } //删除
 
+let time = (startTime,endTime)=>{
+  return new Promise((resolve,reject)=>{
+    db.query(`select * from article where time>='${startTime} 00:00:00' and time<='${endTime} 23:59:59';`,(err,rows)=>{
+      if(err){
+        reject(err);
+      }
+      resolve(rows);
+    })
+  })
+}
+
 exports.show = show
 exports.select = select
 exports.update = update
 exports.insert = insert
 exports.delete = deletes
+exports.time = time
