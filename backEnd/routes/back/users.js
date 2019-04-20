@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-const uSql = require('../../service/user');
-const aSql = require('../../service/article');
+const sql = require('../../service/backuser');
+const uSql = require('../../service/user')
 
 /* GET users listing. */
 module.exports = router
@@ -56,96 +56,114 @@ module.exports = router
         var jsonObj = JSON.parse(body); // 解析接口返回的JSON内容
         console.log(jsonObj)
         res.send({
-          resultcode:'0000',
-          data:{
-            result:'00',
-            text:'发送成功'
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '发送成功',
+            number:sendNumber
           }
         })
       } else {
         console.log('请求异常');
         res.send({
-          resultcode:'0000',
-          data:{
-            result:'01',
-            text:'发送失败'
+          resultcode: '0000',
+          data: {
+            result: '01',
+            text: '发送失败'
           }
         })
       }
     })
 
-    
+
 
   })
 
   //注册进行校验信息
   .post('/register', async (req, res, next) => {
-    if (JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user) {
-      var user = JSON.parse(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]]).user,
-        userName = req.body.userNumber,
-        password = req.body.password;
-      var sendNumber1 = user.sendNumber,
-        sendNumber2 = req.body.sendNumber;
-      if (sendNumber1 === sendNumber2) {
-        //判断用户是否存在
-        sql.select('username', userName)
-          .then(function (d) {
-            if (d[0]) {
-              res.send({
-                'resultcode': '0000',
-                data: {
-                  result: '01',
-                  text: '用户已存在'
-                }
+    var userName = req.body.usernumber,
+      password = req.body.password;
+      password = utility.md5(password); 
+      //判断用户是否存在
+      sql.select('username', userName)
+        .then(function (d) {
+          if (d[0]) {
+            res.send({
+              'resultcode': '0000',
+              data: {
+                result: '01',
+                text: '用户已存在'
+              }
+            })
+          } else {
+            sql.insert(['username', 'password'], [userName, password])
+              .then(function (d) {
+                console.log(JSON.stringify(d));
               })
-            } else {
-              sql.insert(['username', 'password'], [userName, password])
-                .then(function (d) {
-                  console.log(JSON.stringify(d));
-                })
-                .catch(function (err) {
-                  console.log(err);
-                });
-              res.send({
-                'resultcode': '0000',
-                data: {
-                  result: '00',
-                  'text': '注册成功'
-                }
+              .catch(function (err) {
+                console.log(err);
               });
-            }
-          })
-          .catch(function(err){
-            console.log(err);
-          });
-
-      } else {
-        res.send({
-          resultcode: '0000',
-          data: {
-            result: '10',
-            'text': '验证码不正确'
+            res.send({
+              'resultcode': '0000',
+              data: {
+                result: '00',
+                'text': '注册成功'
+              }
+            });
           }
+        })
+        .catch(function (err) {
+          console.log(err);
         });
-      }
-    } else {
-      res.send({
-        resultcode: '0000',
-        data: {
-          result: '11',
-          text: '您的验证码已过期，请重新发送！',
-        }
-      });
-    }
+
+  })
+
+  //前台注册
+  .post('/registers', async (req, res, next) => {
+    var userName = req.body.usernumber,
+      password = req.body.password;
+      password = utility.md5(password); 
+      //判断用户是否存在
+      uSql.select('username', userName)
+        .then(function (d) {
+          if (d[0]) {
+            res.send({
+              'resultcode': '0000',
+              data: {
+                result: '01',
+                text: '用户已存在'
+              }
+            })
+          } else {
+            sql.insert(['username', 'password'], [userName, password])
+              .then(function (d) {
+                console.log(JSON.stringify(d));
+              })
+              .catch(function (err) {
+                console.log(err);
+              });
+            res.send({
+              'resultcode': '0000',
+              data: {
+                result: '00',
+                'text': '注册成功'
+              }
+            });
+          }
+        })
+        .catch(function (err) {
+          console.log(err);
+        });
+
   })
 
   //用户登录
   .post('/login', async (req, res, next) => {
     var userName = req.body.userNumber,
       password = req.body.password;
-    
-    console.log(utility.sha1(userName));
-    console.log(utility.md5(password));
+
+    // console.log(utility.sha1(userName));
+    password = utility.md5(password);
 
     sql.select('username', userName)
       .then(function (d) {
@@ -171,8 +189,8 @@ module.exports = router
               data: {
                 result: '00',
                 text: '登陆成功',
-                userInfo:{
-                  userId:d[0].id,
+                userInfo: {
+                  userId: d[0].id,
                   userNumber: req.body.userNumber
                 }
               }
@@ -192,7 +210,60 @@ module.exports = router
         console.log(err);
       });
   })
-  
-  .get('/logins', async (req, res, next) =>{
+
+  //前台用户登录
+  .post('/logins', async (req, res, next) => {
+    var userName = req.body.userNumber,
+      password = req.body.password;
+
+    password = utility.md5(password);
+
+    uSql.select('username', userName)
+      .then(function (d) {
+        if (d[0]) {
+          var user = d[0].username,
+            pas = d[0].password;
+          if (userName !== user || pas !== password) {
+            res.send({
+              resultcode: '0000',
+              data: {
+                result: '01',
+                text: '用户名或者密码错误'
+              }
+            })
+          } else {
+            var user = {
+              username: user,
+              password: pas
+            };
+            req.session.user = user;
+            res.send({
+              resultcode: '0000',
+              data: {
+                result: '00',
+                text: '登陆成功',
+                userInfo: {
+                  userId: d[0].id,
+                  userNumber: req.body.userNumber
+                }
+              }
+            })
+          }
+        } else {
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '10',
+              text: '用户不存在'
+            }
+          })
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  })
+
+  .get('/logins', async (req, res, next) => {
     res.send('success!');
   });

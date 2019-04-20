@@ -11,10 +11,23 @@ module.exports = router
   //判断用户是否登录
   .post('/', async (req, res, next) => {
     console.log(req.session);
-    if(req.sessionStore.sessions[req.body.key]){
-      console.log('success');
+    if(req.session.user){
+      res.send({
+        resultcode:'0000',
+        data:{
+          result:'00',
+          text:'用户已登陆'
+        }
+      })
+    }else{
+      res.send({
+        resultcode:'0000',
+        data:{
+          result:'01',
+          text:'用户未登陆'
+        }
+      })
     }
-    res.send(req.sessionStore);
     console.log('success');
   })
 
@@ -29,7 +42,6 @@ module.exports = router
     req.session.user = user;
     res.locals.user = user;
     console.log(req.session);
-    console.log('111', res.locals);
 
     // 发送验证码
     var queryData = querystring.stringify({
@@ -67,77 +79,69 @@ module.exports = router
       }
     })
 
-
-
   })
 
   //注册进行校验信息
   .post('/register', async (req, res, next) => {
-    // console.log(Object.keys(req.sessionStore.sessions).length);
-    console.log(req.sessionStore.sessions);
-    // console.log(req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[Object.keys(req.sessionStore.sessions).length - 1]].user);
-    // res.send('success');
     console.log(req.session);
-    res.send('000');
-    // if (Object.keys(req.sessionStore.sessions).length!=0) {
-    //   var user = req.sessionStore.sessions[Object.keys(req.sessionStore.sessions)[0]].user,
-    //     userName = req.body.userNumber,
-    //     password = req.body.password;
-    //     console.log(user);
-    //   var sendNumber1 = user.sendNumber,
-    //     sendNumber2 = req.body.sendNumber;
-    //   if (sendNumber1 === sendNumber2) {
-    //     //判断用户是否存在
-    //     sql.select('username', userName)
-    //       .then(function (d) {
-    //         if (d[0]) {
-    //           res.send({
-    //             'resultcode': '0000',
-    //             data: {
-    //               result: '01',
-    //               text: '用户已存在'
-    //             }
-    //           })
-    //         } else {
-    //  password = utility.md5(password);
-    //           sql.insert(['username', 'password'], [userName, password])
-    //             .then(function (d) {
-    //               console.log(JSON.stringify(d));
-    //             })
-    //             .catch(function (err) {
-    //               console.log(err);
-    //             });
-    //           res.send({
-    //             'resultcode': '0000',
-    //             data: {
-    //               result: '00',
-    //               'text': '注册成功'
-    //             }
-    //           });
-    //         }
-    //       })
-    //       .catch(function (err) {
-    //         console.log(err);
-    //       });
+    if (req.session.user) {
+      var user = req.session.user,
+        userName = req.body.userNumber,
+        password = req.body.password;
+        console.log(user);
+      var sendNumber1 = user.sendNumber,
+        sendNumber2 = req.body.sendNumber;
+      if (sendNumber1 === sendNumber2) {
+        //判断用户是否存在
+        sql.select('username', userName)
+          .then(function (d) {
+            if (d[0]) {
+              res.send({
+                'resultcode': '0000',
+                data: {
+                  result: '01',
+                  text: '用户已存在'
+                }
+              })
+            } else {
+              sql.insert(['username', 'password'], [userName, password])
+                .then(function (d) {
+                  console.log(JSON.stringify(d));
+                })
+                .catch(function (err) {
+                  console.log(err);
+                });
+              res.send({
+                'resultcode': '0000',
+                data: {
+                  result: '00',
+                  'text': '注册成功'
+                }
+              });
+            }
+          })
+          .catch(function (err) {
+            console.log(err);
+          });
 
-    //   } else {
-    //     res.send({
-    //       resultcode: '0000',
-    //       data: {
-    //         result: '10',
-    //         'text': '验证码不正确'
-    //       }
-    //     });
-    //   }
-    // } else {
-    //   res.send({
-    //     resultcode: '0000',
-    //     data: {
-    //       result: '11',
-    //       text: '您的验证码已过期，请重新发送！',
-    //     }
-    //   });
-    // }
+      } else {
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '10',
+            'text': '验证码不正确'
+          }
+        });
+      }
+    } else {
+      res.send({
+        resultcode: '0000',
+        data: {
+          result: '11',
+          text: '您的验证码已过期，请重新发送！',
+        }
+      });
+    }
   })
 
   //用户登录
@@ -145,7 +149,6 @@ module.exports = router
     var userName = req.body.userNumber,
       password = req.body.password;
 
-    console.log(utility.sha1(userName));
     console.log(utility.md5(password));
     password = utility.md5(password);
 
@@ -167,41 +170,18 @@ module.exports = router
               username: user,
               password: pas
             };
-            // req.session.user = user;
-            // console.log(req.session);
-            // console.log(req.session.user);
-            req.session.regenerate(function (err) {
-              if (err) {
-                res.send({
-                  resultcode: '0000',
-                  msg: '登陆失败'
-                })
-              }
-              req.session.loginUser = user;
-              console.log(req.session);
-              res.send({
-                resultcode: '0000',
-                data: {
-                  result: '00',
-                  text: '登陆成功',
-                  userInfo: {
-                    userId: d[0].id,
-                    userNumber: req.body.userNumber
-                  }
+            req.session.user = user;
+            res.send({
+              resultcode: '0000',
+              data: {
+                result: '00',
+                text: '登陆成功',
+                userInfo: {
+                  userId: d[0].id,
+                  userNumber: req.body.userNumber
                 }
-              })
+              }
             })
-            // res.send({
-            //   resultcode: '0000',
-            //   data: {
-            //     result: '00',
-            //     text: '登陆成功',
-            //     userInfo: {
-            //       userId: d[0].id,
-            //       userNumber: req.body.userNumber
-            //     }
-            //   }
-            // })
           }
         } else {
           res.send({
@@ -216,23 +196,6 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       });
-  })
-  .post('/logins', async (req, res, next) => {
-    // res.cookie('islogin', req.body.userNumber, {
-    //   maxAge: 60000
-    // });
-    var user = {
-      username:req.body.userNumber
-    }
-    req.session.user = user;
-    res.locals.username = req.body.userNumber;
-    req.session.username = res.locals.username;
-    console.log(req.session);
-    console.log(req.sessionID);
-    res.send({
-      sessionID:req.sessionID
-    });
-    return;
   })
 
   //退出登录
