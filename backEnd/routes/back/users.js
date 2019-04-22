@@ -4,6 +4,10 @@ var router = express.Router();
 const sql = require('../../service/backuser');
 const uSql = require('../../service/user')
 
+const request = require('request'),
+  querystring = require('querystring'),
+  utility = require('utility');
+
 /* GET users listing. */
 module.exports = router
   //判断用户是否登录
@@ -122,7 +126,9 @@ module.exports = router
   .post('/registers', async (req, res, next) => {
     var userName = req.body.usernumber,
       password = req.body.password;
+      console.log(req.body.usernumber,req.body.password);
       password = utility.md5(password); 
+      console.log('11111',password);
       //判断用户是否存在
       uSql.select('username', userName)
         .then(function (d) {
@@ -135,7 +141,7 @@ module.exports = router
               }
             })
           } else {
-            sql.insert(['username', 'password'], [userName, password])
+            uSql.insert(['username', 'password'], [userName, password])
               .then(function (d) {
                 console.log(JSON.stringify(d));
               })
@@ -162,7 +168,6 @@ module.exports = router
     var userName = req.body.userNumber,
       password = req.body.password;
 
-    // console.log(utility.sha1(userName));
     password = utility.md5(password);
 
     sql.select('username', userName)
@@ -213,13 +218,14 @@ module.exports = router
 
   //前台用户登录
   .post('/logins', async (req, res, next) => {
-    var userName = req.body.userNumber,
+    var userName = req.body.usernumber,
       password = req.body.password;
 
     password = utility.md5(password);
 
     uSql.select('username', userName)
       .then(function (d) {
+        console.log(d);
         if (d[0]) {
           var user = d[0].username,
             pas = d[0].password;
@@ -262,8 +268,4 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       });
-  })
-
-  .get('/logins', async (req, res, next) => {
-    res.send('success!');
   });

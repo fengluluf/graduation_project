@@ -45,9 +45,10 @@
     $('.submit').on('click',function(){
       $.ajax({
         type:'post',
-        url:'http://localhost:3000/users',
+        url:'http://localhost:3000/backUsers/registers',
         data:{
-          sessionID:localStorage.getItem('key')
+          usernumber:$('input:eq(0)').val(),
+          password:$('input:eq(1)').val()
         },
         success:function(res){
           console.log(res);
@@ -57,10 +58,10 @@
     $('.submitt').on('click',function(){
       $.ajax({
         type:'post',
-        url:'http://localhost:3000/users/logins',
+        url:'http://localhost:3000/backUsers/logins',
         data:{
-          userNumber:'15732115283',
-          password:'admin'
+          usernumber:$('input:eq(0)').val(),
+          password:$('input:eq(1)').val()
         },
         success:function(res){
           localStorage.setItem('key',res.sessionID);

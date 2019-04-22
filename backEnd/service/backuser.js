@@ -34,7 +34,7 @@ let update = (updateattributename, newdata,attributename,attribute) => {
 
 let insert = (attributenames, attributes) => {
   return new Promise((resolve, reject) => {
-    db.query(`insert into backUser (${attributenames}) values (${attributes})`, (err,rows) => {
+    db.query(`insert into backUser (${attributenames}) values (${attributes[0]},'${attributes[1]}')`, (err,rows) => {
       if(err) {
         reject(err);
       }
