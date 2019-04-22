@@ -105,6 +105,7 @@ export default {
     border-radius: 10px;
     /* background-color:#fff; */
     background:rgba(255, 255, 255, 0.3);
+    color:#fff;
 }
 .login .login-logo{
     height:95px;

@@ -34,7 +34,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/business-server/news/bySelf',
+                url: baseUrl + '/backDrug/getFirst',
                 data:data,
                 type: 'GET',
                 success: function (d) {
@@ -63,6 +63,33 @@ export default {
                 url: baseUrl + '/business-server/news/bySelf',
                 data:data,
                 type: 'GET',
+                success: function (d) {
+                    def.resolve(d)
+                },
+                error: function (d) {
+                    def.resolve(d)
+                }
+            })
+            return def;
+        }
+    },
+    //执行删除操作
+    deleteItem: function (data) {
+        if(develop) {
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                    "resultCode": 200,
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
+        }else {
+            var def = $.Deferred();
+            netAjax.singleRequest({
+                url: baseUrl + '/backDrug/deleteFirst',
+                data:data,
+                type: 'POST',
                 success: function (d) {
                     def.resolve(d)
                 },
