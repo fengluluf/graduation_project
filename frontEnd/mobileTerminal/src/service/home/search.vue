@@ -5,20 +5,24 @@
                 <div class="header-search">
                     <!-- <van-nav-bar @click-left="onClickLeft" left-arrow ></van-nav-bar> -->
                     <van-icon name="arrow-left" />
-                    <van-search v-model="searchTxt" placeholder="搜贴士\疾病\药品" show-action shape="round" @search="onSearch">
+                    <van-search v-model="searchTxt" placeholder="搜贴士\疾病\药品" show-action shape="round" @focus="onSearch">
                         <div slot="action" @click="getSearchList" class="searchBtn">搜索</div>
                     </van-search>
                 </div>
             </div>
             <div slot="main" class="main">
-                <div class="main-select">
+                <div class="main-select" v-if="showSelect">
                     <van-tabs v-model="active" color="#28b8a1" background="f5f7f8" @click="getSearchList()">
                         <van-tab title="药品">
                             <van-list finished-text="没有更多了">
                                 <van-cell v-for="(item,key) in drugList" :key="key" :title="item.drugName" />
                             </van-list>
                         </van-tab>
-                        <van-tab title="疾病">内容 2</van-tab>
+                        <van-tab title="疾病">
+                            <van-list finished-text="没有更多了">
+                                <van-cell v-for="(item,key) in diseaseList" :key="key" :title="item.diseaseName" />
+                            </van-list>
+                        </van-tab>
                         <van-tab title="贴士">内容 3</van-tab>
                     </van-tabs>
                 </div>              
@@ -41,7 +45,10 @@ export default {
         return {
             active:0,//选中的底部导航
             searchTxt:'',//搜索的内容
-            drugList: [],
+            showSelect:false,//是否显示搜索选项
+            drugList: [],//药品列表
+            diseaseList:[],//疾病列表
+            articleList:[],//文章列表
         }
     },
     created() {
@@ -51,13 +58,27 @@ export default {
         onClickLeft(){
             this.$router.go(-1);
         },
-        //确定搜索
+        //搜索框获取焦点
         onSearch(){
+            if(this.showSelect){
+                this.showSelect = false;
+            }
+        },
+        //清空列表
+        clearList(){
 
         },
+        //点击搜索，获取药品列表
         getSearchList(){
+            this.drugList = [];
             var _this = this;
             var data = {str:this.searchTxt}
+            if(this.searchTxt==''){
+                this.$toast("请输入搜索内容！")
+                return false;
+            }else{
+                this.showSelect = true;
+            }
             if(this.active == 0){
                 pageData.searchDrug(data).then(function(res){
                     if(res.resultcode=="0000"){
@@ -71,9 +92,19 @@ export default {
                     }
                 })
             }else if(this.active == 1){
-
+                pageData.searchDisease(data).then(function(res){
+                    if(res.resultcode=="0000"){
+                        if(res.data.result=="00"){
+                            _this.diseaseList = res.data.arr
+                        }else{
+                            _this.$toast(res.data.text)
+                        }
+                    }else{
+                        _this.$toast(res.data.text);
+                    }
+                })
             }else if(this.active == 2){
-
+                console.log("bbbbbbb")
             }
         },
     },

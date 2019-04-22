@@ -46,19 +46,11 @@ export default {
                 if(op.callBack&&typeof op.callBack==="function"){
                     op.callBack();
                 }
-                // layer.open({
-                //     content:"请求发送失败",
-                //     skin: 'msg',
-                //     time: laterTimer
-                // });
             },
             success:function (sucData) {
                 sucData = typeof sucData === 'string' ? JSON.parse(sucData) : sucData;
-                if(sucData.resultCode===200){
+                if(sucData.resultcode==='0000'){
                    op.success(sucData);
-                }else if(sucData.resultCode===403||sucData.resultCode===401){
-                    location.href = baseUrl+'/admin/index.html#/login';
-                    showMsg(sucData.resultMessage);
                 }else{
                     showMsg(sucData.resultMessage);
                 }

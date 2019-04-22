@@ -9,8 +9,8 @@
             <el-table v-model="loading" :data="tableData" style="width: 100%" border stripe size="small" @selection-change="handleSelectionChange" :height="tableListHeight">
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
                 <el-table-column align="center" type="index" label="序号" width=""></el-table-column>
-                <el-table-column align="center" prop="date" label="修改时间"></el-table-column>
-                <el-table-column align="center" prop="drugsSort" label="药品一级分类名称"></el-table-column>
+                <!-- <el-table-column align="center" prop="date" label="修改时间"></el-table-column> -->
+                <el-table-column align="center" prop="drugname" label="药品一级分类名称"></el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="deleteItemHandler(scope.row)" class="text-danger" :disabled="scope.row.status == 0">删除</el-button>
@@ -103,32 +103,58 @@ export default {
                 pageNo: this.pager.currentPage,
                 pageSize: this.pager.pageSize
             };
-            PageData.listInfo(data).then(function(d) {
-                if (d.resultCode == 200) {
-                    _this.loading = false;
-                    _this.tableData = d.resultJson.pageContent;
-                    _this.pager.pageNo = d.resultJson.pageNum;
-                    _this.pager.totalPage = d.resultJson.totalPage;
-                    _this.pager.total = d.resultJson.count;
+            PageData.listInfo().then(function(d) {
+                if (d.resultcode == "0000") {
+                    if(d.data.result == "00"){
+                        _this.loading = false;
+                        _this.tableData = d.data.array;
+                        // _this.pager.pageNo = d.resultJson.pageNum;
+                        // _this.pager.totalPage = d.resultJson.totalPage;
+                        // _this.pager.total = d.resultJson.count;
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
                 } else {
                     _this.$message({
                         type: "warning",
-                        message: d.resultMessage
+                        message: d.data.text
                     });
                 }
             });
         },
         //删除分类
-        deleteItemHandler(){
+        deleteItemHandler(item){
+            var data = {id:item.id}
             this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
             confirmButtonText: '确定删除',
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
+                PageData.deleteItem(data).then(function(res){
+                    if(res.resultcode=="0000"){
+                        if(d.data.result=="00"){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.getTableData();
+                        }else{
+                            this.$message({
+                                type: 'warnning',
+                                message: d.data.text
+                            }); 
+                        }
+                    }else{
+                        this.$message({
+                            type: 'warnning',
+                            message: d.data.text
+                        }); 
+                    }
+                })
+                
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -138,18 +164,19 @@ export default {
         },
         //全部删除
         allDelete(){
-            var data = [];
+            var data = {};
             if(this.multipleSelection.length!=0){
                 this.$confirm('此操作将永久删除所有选中的分类, 是否继续?', '提示', {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(() => {
-                    for(var i=0;i<this.multipleSelection.length;i++){
-                        data.push(this.multipleSelection[i].id)
-                    }
+                    // for(var i=0;i<this.multipleSelection.length;i++){
+                    //     data.push(this.multipleSelection[i].id)
+                    // }
+                    data = {id:this.multipleSelection[0].id}
                     PageData.deleteAll(data).then(d => {
-                        if (d.resultCode == 200) {
+                        if (d.resultcode == "0000") {
                             this.$message({
                                 type: 'success',
                                 message: '删除成功!'
