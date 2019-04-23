@@ -52,7 +52,7 @@ export default {
             var def = $.Deferred();
             setTimeout(function () {
                 var d = {
-                    "resultCode": 200,
+                    "resultcode": '0000',
                 }
                 def.resolve(d);
             }, 100);
@@ -63,6 +63,33 @@ export default {
                 url: baseUrl + '/business-server/news/bySelf',
                 data:data,
                 type: 'GET',
+                success: function (d) {
+                    def.resolve(d)
+                },
+                error: function (d) {
+                    def.resolve(d)
+                }
+            })
+            return def;
+        }
+    },
+    //确认新增
+    sendData: function (data) {
+        if(develop) {
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                    "resultcode": '0000',
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
+        }else {
+            var def = $.Deferred();
+            netAjax.singleRequest({
+                url: baseUrl + '/backDrug/addFirst',
+                data:data,
+                type: 'POST',
                 success: function (d) {
                     def.resolve(d)
                 },

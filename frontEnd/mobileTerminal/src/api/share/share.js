@@ -25,7 +25,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/user-server/user/login',
+                url: baseUrl + '/article/articlePush',
                 data:data,
                 type: 'POST',
                 success: function (d) {
@@ -55,7 +55,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/user-server/user/login',
+                url: baseUrl + '/backArticle/getArticle',
                 data:data,
                 type: 'POST',
                 success: function (d) {

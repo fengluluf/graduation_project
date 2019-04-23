@@ -8,24 +8,18 @@
                 <!-- <div class="drugs-title">{{drugsDetail.title}}</div> -->
                 <div class="drugs-summary">
                     <div class="summary-title">简介</div>
-                    <div class="summary-con" v-html="drugsDetail.summary"></div>
+                    <div class="summary-con" v-html="drugsDetail.drugTxt"></div>
                 </div>
                 <div>
                     <van-collapse v-model="activeNames">
                         <van-collapse-item title="适应症" name="1">
-                            疏风散寒，解表清热。用于风寒感冒引起头痛发热、咳嗽咽干、全身酸重、鼻流清涕
+                            {{drugsDetail.drugAtten}}
                         </van-collapse-item>
                         <van-collapse-item title="用量用法" name="2">
-                            口服：开水冲服，每次12g，每日2～3次。
+                            {{drugsDetail.drugUsage}}
                         </van-collapse-item>
                         <van-collapse-item title="注意事项" name="3">
-                            （1）素有高血压、心脏病、肝病、糖尿病、肾病等严重慢性病者，孕妇或正在接受其他治疗的患者均应在医师指导下服用。<br/>
-                            （2）应严格按照用法用量服用，婴幼儿、年老体虚患者应在医师指导下服用。<br/>
-                            （3）服用三天后，症状无缓解，发热、咳嗽加重，并出现其他严重症状时，应停药，并去医院就诊。<br/>
-                            （4）该药应放置于儿童不能触及处。<br/>
-                            （5）过敏体质者慎用。<br/>
-                            （6）不适用于风热感冒。不宜在服药期间同时服用滋补性中成药。<br/>
-                            （7）在服用本品期间应多饮开水、避风寒和忌食生冷油腻。<br/>
+                            {{drugsDetail.drugSymptom}}
                         </van-collapse-item>
                     </van-collapse>
                 </div>
@@ -44,7 +38,7 @@ export default {
     data() {
         return {
             activeNames:['1','2','3'],//控制展开的面板列表
-            drugsDetail:{title:'感冒清热冲剂',summary:'感冒清热冲剂是治疗风寒感冒的常用药物，是由中药荆芥穗、桔梗、柴胡、苦杏仁等药物共同配伍加工提炼而成的中成药，方剂中的荆芥是治疗感冒的良药，具有散风、解表、透疹等多种功能。'},
+            drugsDetail:{},
             
         }
     },

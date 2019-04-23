@@ -13,12 +13,13 @@
                 <el-table-column align="center" prop="drugname" label="药品一级分类名称"></el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="deleteItemHandler(scope.row)" class="text-danger" :disabled="scope.row.status == 0">删除</el-button>
+                        <el-button type="text" size="small" @click="deleteItemHandler(scope.row)" class="text-danger">删除</el-button>
+                        <el-button type="text" size="small" @click="modifyItemHandler(scope.row)" class="text-primary">修改</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-        <el-dialog title="添加分类" :visible.sync="dialogAddSort">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogAddSort">
             <div class="addSort">
                 <ul>
                     <li>
@@ -29,6 +30,20 @@
             </div>
             <span slot="footer" class="dialog-footer text-center">
                 <el-button size="small" type="primary" @click="sendData()">提交</el-button>
+                <el-button size="small" type="default" @click="cancelData()">取消</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="修改分类" :visible.sync="dialogModifySort">
+            <div class="addSort">
+                <ul>
+                    <li>
+                        <span class="sortTitle">一级分类名称</span>
+                        <el-input type="text" size="small" placeholder="请输入内容" v-model="modifysortName"> </el-input>
+                    </li>
+                </ul>
+            </div>
+            <span slot="footer" class="dialog-footer text-center">
+                <el-button size="small" type="primary" @click="sendModifyData()">提交</el-button>
                 <el-button size="small" type="default" @click="cancelData()">取消</el-button>
             </span>
         </el-dialog>
@@ -55,7 +70,11 @@ export default {
             tableListHeight:0,//表格高度
             loading:true,//表格加载
             dialogAddSort:false,//是否显示添加弹窗
+            dialogModifySort:false,//是否显示修改弹窗
             addsortName:'',//添加的分类名称
+            modifysortName:'',//修改的分类名称
+            modifysortId:'',//修改的分类id
+            dialogTitle:'',//弹窗名称
         }
     },
     created(){
@@ -70,15 +89,68 @@ export default {
         //添加药品分类
         sortAddHandler(){
             this.dialogAddSort = true;
+            this.dialogTitle = '添加分类'
         },
         //取消新增
         cancelData(){
             this.dialogAddSort = false;
             this.addsortName = "";
+            this.dialogModifySort = false;
+            this.modifysortName = "";
+            this.modifysortId = '';
         },
         //确认新增
         sendData(){
-
+            var _this = this;
+            var data = {drugname:this.addsortName}
+            PageData.sendData(data).then(function(d){
+                if(d.resultcode=='0000'){
+                    if(d.data.result=='00'){
+                        _this.dialogAddSort = false;
+                        _this.dialogTitle = '';
+                        _this.addsortName = ""; 
+                        _this.getTableData();
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                }else{
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            })
+        },
+        //确认修改
+        sendModifyData(){
+            var _this = this;
+            var data = {
+                drugname:this.modifysortName,
+                id:this.modifysortId
+            }
+            PageData.sendModifyData(data).then(function(d){
+                if(d.resultcode=='0000'){
+                    if(d.data.result=='00'){
+                        _this.dialogModifySort = false;
+                        _this.modifysortName = ""; 
+                        _this.modifysortId = "";
+                        _this.getTableData();
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                }else{
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            })
         },
         //设置表格高度
         resizeTableHeight1() {
@@ -124,6 +196,12 @@ export default {
                     });
                 }
             });
+        },
+        //修改分类
+        modifyItemHandler(item){
+            this.dialogModifySort = true;
+            this.modifysortName = item.drugname;
+            this.modifysortId = item.id;
         },
         //删除分类
         deleteItemHandler(item){

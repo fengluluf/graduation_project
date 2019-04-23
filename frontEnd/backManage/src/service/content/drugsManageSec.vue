@@ -2,7 +2,7 @@
     <div class="drugsManageSec">
         <div class="drugsManageSec-header">
             <ul>
-                <li>
+                <!-- <li>
                     <span>修改时间</span>
                     <el-date-picker
                         v-model="searchData.newsDate"
@@ -14,22 +14,22 @@
                         format="yyyy 年 MM 月 dd 日"
                         value-format="timestamp">
                     </el-date-picker>
-                </li>
+                </li> -->
                 <li>
                     <span>药品一级分类</span>
                     <el-select v-model="searchData.drugsSortFir" placeholder="请选择" size="small">
                         <el-option
                         v-for="item in drugsOptionsFir"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item.id"
+                        :label="item.drugname"
+                        :value="item.id">
                         </el-option>
                     </el-select>
                 </li>
-                <li>
+                <!-- <li>
                     <span>药品二级分类</span>
                     <el-input size="small" v-model="searchData.drugsSortSec" placeholder="请输入内容"></el-input>
-                </li>
+                </li> -->
                 <li>
                     <el-button type="primary" size="small" @click="userSearchHandler">搜索</el-button>
                 </li>
@@ -44,12 +44,13 @@
             </div>
             <el-table v-model="loading" :data="tableData" style="width: 100%" border stripe size="small" @selection-change="handleSelectionChange" :height="tableListHeight">
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
-                <el-table-column align="center" prop="date" label="修改时间" width="200"></el-table-column>
-                <el-table-column align="center" prop="drugsSortF" label="药品一级分类名称" width="180"></el-table-column>
-                <el-table-column align="center" prop="drugsSortS" label="药品二级分类名称" width="180"></el-table-column>
+                <!-- <el-table-column align="center" prop="date" label="修改时间" width="200"></el-table-column> -->
+                <el-table-column align="center" prop="drugcateName" label="药品一级分类名称" width="180"></el-table-column>
+                <el-table-column align="center" prop="drugname" label="药品二级分类名称" width="180"></el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="deleteItemHandler(scope.row)" class="text-danger" :disabled="scope.row.status == 0">删除</el-button>
+                        <el-button type="text" size="small" @click="modifyItemHandler(scope.row)" class="text-primary">修改</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -69,7 +70,7 @@
                     <li>
                         <span class="content-title">一级分类</span>
                         <el-select v-model="drugs.drugsSortFir" placeholder="请选择" size="small">
-                            <el-option v-for="item in drugsOptionsFir" :key="item.value" :label="item.label" :value="item.value">
+                            <el-option v-for="item in drugsOptionsFir" :key="item.id" :label="item.drugname" :value="item.id">
                             </el-option>
                         </el-select>
                     </li>
@@ -112,6 +113,7 @@ export default {
         }
     },
     created(){
+        this.getdrugsortFir();
         this.getTableData();
     },
     mounted() {
@@ -137,20 +139,71 @@ export default {
         },
         //点击搜索
         userSearchHandler(){
+            var _this = this;
+            var data = {drugcate:this.searchData.drugsSortFir}
+            PageData.getSecond(data).then(d => {
+                if (d.resultcode == "0000") {
+                    if(d.data.result == "00"){
+                        _this.tableData = d.data.array;
+                        _this.tableData.forEach((item) => {
+                            for(let i=0;i<_this.drugsOptionsFir.length;i++){
+                                if(_this.drugsOptionsFir[i].id == item.drugcate){
+                                    item.drugcateName = _this.drugsOptionsFir[i].drugname
+                                }
+                            }
+                        })
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            })
         },
-        //添加药品分类
+        //添加药品分类点击事件
         addDrugsHandler(){
             this.dialogAddSSort = true;
         },
+        //添加药品二级分类确定事件
         sendData(){
             this.dialogAddSSort = false
+            var data = {
+                drugcate:this.drugs.drugsSortFir,
+                drugname:this.drugs.drugsSortSec
+            }
+            PageData.addSecond(data).then(d => {
+                if (d.resultcode == "0000") {
+                    if(d.data.result == "00"){
+                        this.dialogAddSSort = false;
+                        this.getTableData();
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            })
         },
+        //关闭添加弹窗
         handleClose(){
             this.dialogAddSSort = false;
             this.drugs = {
                 drugsSortFir:'',drugsSortSec:''
             }
         },
+        //取消添加
         cancelData(){
             this.dialogAddSSort = false;
             this.drugs = {
@@ -160,37 +213,95 @@ export default {
         //获取表格数据
         getTableData(){
             var _this = this;
-            var data = {
-                userId: userId,
-                pageNo: this.pager.currentPage,
-                pageSize: this.pager.pageSize
-            };
-            PageData.listInfo(data).then(function(d) {
-                if (d.resultCode == 200) {
-                    _this.loading = false;
-                    _this.tableData = d.resultJson.pageContent;
-                    _this.pager.pageNo = d.resultJson.pageNum;
-                    _this.pager.totalPage = d.resultJson.totalPage;
-                    _this.pager.total = d.resultJson.count;
+            // var data = {
+            //     userId: userId,
+            //     pageNo: this.pager.currentPage,
+            //     pageSize: this.pager.pageSize
+            // };
+            PageData.listInfo().then(function(d) {
+                if (d.resultcode == '0000') {
+                    if(d.data.result == '00'){
+                        _this.loading = false;
+                        _this.tableData = d.data.array;
+                        _this.tableData.forEach((item) => {
+                            for(let i=0;i<_this.drugsOptionsFir.length;i++){
+                                if(_this.drugsOptionsFir[i].id == item.drugcate){
+                                    item.drugcateName = _this.drugsOptionsFir[i].drugname
+                                }
+                            }
+                        })
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                    
                 } else {
                     _this.$message({
                         type: "warning",
-                        message: d.resultMessage
+                        message: d.data.text
                     });
                 }
             });
         },
-        //删除用户
+        //获取一级分类
+        getdrugsortFir(){
+            var _this = this;
+            PageData.getdrugsortFir().then(function(d) {
+                if (d.resultcode == "0000") {
+                    if(d.data.result == "00"){
+                        _this.drugsOptionsFir = d.data.array;
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            });
+        },
+        //修改分类
+        modifyItemHandler(item){
+            this.dialogModifySort = true;
+            this.modifysortName = item.drugname;
+            this.modifysortId = item.id;
+        },
+        //删除药品二级分类
         deleteItemHandler(){
+            var _this = this;
             this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
             confirmButtonText: '确定删除',
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
+                PageData.deleteSecond().then(function(d) {
+                    if (d.resultcode == "0000") {
+                        if(d.data.result == "00"){
+                            _this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            _this.getTableData();
+                        }else{
+                            _this.$message({
+                                type: "warning",
+                                message: d.data.text
+                            });
+                        }
+                    } else {
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
                 });
+                
             }).catch(() => {
                 this.$message({
                     type: 'info',

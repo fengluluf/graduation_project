@@ -2,7 +2,7 @@
     <div class="drugsList">
         <div class="drugsList-header">
             <ul>
-                <li>
+                <!-- <li>
                     <span>发布时间</span>
                     <el-date-picker
                         v-model="searchData.newsDate"
@@ -14,7 +14,7 @@
                         format="yyyy 年 MM 月 dd 日"
                         value-format="timestamp">
                     </el-date-picker>
-                </li>
+                </li> -->
                 <li>
                     <span>一级分类</span>
                     <el-select v-model="searchData.drugsValueFir" placeholder="请选择" size="small">
@@ -57,10 +57,10 @@
             <el-table v-model="loading" :data="tableData" style="width: 100%" border stripe size="small" @selection-change="handleSelectionChange" :height="tableListHeight">
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
                 <el-table-column align="center" type="index" label="序号" width=""></el-table-column>
-                <el-table-column align="center" prop="date" label="药品发布时间" width="200"></el-table-column>
-                <el-table-column align="center" prop="drugsValueFir" label="药品一级分类" width="180"></el-table-column>
-                <el-table-column align="center" prop="drugsValueSec" label="药品二级分类" width="180"></el-table-column>
-                <el-table-column align="center" prop="name" label="药品名称" width="180"></el-table-column>
+                <!-- <el-table-column align="center" prop="date" label="药品发布时间" width="200"></el-table-column> -->
+                <el-table-column align="center" prop="drugCate" label="药品一级分类" width="180"></el-table-column>
+                <el-table-column align="center" prop="drugCate2" label="药品二级分类" width="180"></el-table-column>
+                <el-table-column align="center" prop="drugName" label="药品名称" width="180"></el-table-column>
                 <el-table-column align="center" label="内容" width="180">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showItemHandler(scope.row)">详情</el-button>
@@ -308,18 +308,18 @@ export default {
         //获取表格数据
         getTableData(){
             var _this = this;
-            var data = {
-                userId: userId,
-                pageNo: this.pager.currentPage,
-                pageSize: this.pager.pageSize
-            };
-            PageData.listInfo(data).then(function(d) {
-                if (d.resultCode == 200) {
+            // var data = {
+            //     userId: userId,
+            //     pageNo: this.pager.currentPage,
+            //     pageSize: this.pager.pageSize
+            // };
+            PageData.listInfo().then(function(d) {
+                if (d.resultcode == '0000') {
                     _this.loading = false;
-                    _this.tableData = d.resultJson.pageContent;
-                    _this.pager.pageNo = d.resultJson.pageNum;
-                    _this.pager.totalPage = d.resultJson.totalPage;
-                    _this.pager.total = d.resultJson.count;
+                    _this.tableData = d.data.array;
+                    // _this.pager.pageNo = d.resultJson.pageNum;
+                    // _this.pager.totalPage = d.resultJson.totalPage;
+                    // _this.pager.total = d.resultJson.count;
                 } else {
                     _this.$message({
                         type: "warning",

@@ -22,6 +22,7 @@
     </div>
 </template>
 <script>
+import pageData from "../../api/home/findDisease"
 import "../../assets/style/font-icon/iconfont.css"
 import Layout from "../../components/layout/layout1.vue"
 import base from '../../util/base'
@@ -40,20 +41,31 @@ export default {
     data() {
         return {
             listscrollTops:0,//滚动的高度
-            diseaseSort:[{id:1,name:"内科疾病"},{id:2,name:"外科疾病"},{id:3,name:"妇产科疾病"},
-            {id:4,name:"儿科疾病"},{id:5,name:"传染病"},{id:6,name:"神经病"},{id:7,name:"精神病"},
-            {id:8,name:"眼科疾病"},{id:9,name:"耳鼻咽喉头颈外科疾病"},{id:10,name:"口腔科疾病"},{id:11,name:"皮肤性病科疾病"},]
+            diseaseSort:[]
         }
     },
     created() {
-        
+        this.getDiseaseSort()
     },
     methods: {
         //返回上一级
         onClickLeft(){
             this.$router.go(-1)
         },
-        //进入药品详情页
+        //获取疾病一级分类
+        getDiseaseSort(){
+            var _this = this;
+            pageData.diseaseRes().then(function (d) {
+                if(d.resultcode == "0000") {
+                    _this.diseaseSort = d.data.array;
+                }else{
+                    _this.$dialog.alert({
+                        message: d.data.text
+                    });
+                }
+            })
+        },
+        //进入疾病详情页
         goDiseaseSort(item){
             this.$router.push({path:'/findDiseaseSec',query:{id:item.id}});
             this.listscrollTops = this.$children[0].$refs.main.scrollTop;

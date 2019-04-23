@@ -21,7 +21,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/users/login',
+                url: baseUrl + '/backUsers/logins',
                 data:data,
                 type: 'POST',
                 success: function (d) {

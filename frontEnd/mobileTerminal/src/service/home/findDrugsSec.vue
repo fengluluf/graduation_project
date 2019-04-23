@@ -44,22 +44,7 @@ export default {
             active:0,
             query:{},//药品一级分类信息
             sortList:[],//分类导航列表        
-            drugsList:[{id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},
-            {id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'}],//药品列表数据
+            drugsList:[{id:1,name:'感冒清热冲剂',instructions:'开水冲服',efficacy:'感冒发热、咳嗽头痛、咽喉肿痛'},],//药品列表数据
             listscrollTops:0,//滚动的高度
         }
     },
@@ -76,12 +61,10 @@ export default {
             this.drugsList = [];
             var _this = this;  
             var sortId;
-            console.log(firstSort,_this.active)
             if(firstSort){
                 sortId = firstSort;
             }else{
                 this.sortList.forEach(function(ele,index){
-                    console.log(index)
                     if(index == _this.active){
                         sortId = ele.id;
                     }
