@@ -57,7 +57,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/drug/searchDisease',
+                url: baseUrl + '/disease/searchDisease',
                 data:data,
                 type: 'POST',
                 success: function (d) {

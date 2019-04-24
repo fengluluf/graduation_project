@@ -21,7 +21,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/users/send',
+                url: baseUrl + '/backUsers/send',
                 data:data,
                 type: 'POST',
                 success: function (d) {
@@ -51,7 +51,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/users/register',
+                url: baseUrl + '/backUsers/registers',
                 data:data,
                 type: 'POST',
                 success: function (d) {

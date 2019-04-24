@@ -36,7 +36,8 @@ export default {
         return {
             phoneNum: '',
             password: '',
-            verification:'',
+            verification:'',//用户填写的验证码
+            getverification:'',//正确的验证码
             errorMsg:'',
             isShowPWD:false,//是否显示密码
             countdown:60,
@@ -98,9 +99,10 @@ export default {
                 });
                 return false;
             }else{
+                this.setSendTime()
                 pageData.getVer(data).then(function (d) {
                     if(d.data.result == "00") {
-                        _this.setSendTime()
+                        _this.getverification = d.data.number;
                     }else{
                         _this.$dialog.alert({
                             message: d.data.text
@@ -115,7 +117,11 @@ export default {
             var data = {
                 userNumber:this.phoneNum,
                 password:this.password,
-                sendNumber:this.verification
+                // sendNumber:this.verification
+            }
+            if(this.verification != this.getverification){
+                this.$dialog.alert({message:"验证码不正确！"})
+                return false;
             }
             if(12<this.password.length||this.password.length<6){
                 this.$dialog.alert({
@@ -124,7 +130,7 @@ export default {
                 return false;
             }else{
                 pageData.register(data).then(function(d){
-                    if(d.resultcode == "000"){
+                    if(d.resultcode == "0000"){
                         _this.$dialog.alert({
                             message: d.data.text
                         });

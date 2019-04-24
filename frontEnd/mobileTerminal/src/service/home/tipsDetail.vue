@@ -115,7 +115,7 @@ export default {
         }
     },
     created() {
-        this.singleArticleRequest()
+        // this.singleArticleRequest()
         if(this.$route.query.id){
             this.articleId = this.$route.query.id;
             this.title = '健康贴士' + this.$route.query.id

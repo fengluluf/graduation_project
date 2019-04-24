@@ -77,7 +77,7 @@ export default {
         }
     },
     created() {
-        
+        this.recommendRequest();
     },
     methods: {
         onClickRight() {//发布文章
@@ -85,16 +85,17 @@ export default {
             var _this = this;
             if(this.isShowEdit){
                 this.rightText = '发布'
-                
             }else{
                 this.rightText = '';
                 var data = {
-                    title:this.shareReqData.title,
-                    shareContent:this.shareReqData.shareContent
+                    userId:1,
+                    articleName:this.shareReqData.title,
+                    articleTxt:this.shareReqData.shareContent
                 };
                 pageData.publishRes(data).then(function (d) {
-                    if(d.resultCode == 200) {
-                        _this.isShowEdit = false
+                    if(d.resultcode == '0000') {
+                        _this.isShowEdit = false;
+                        _this.$toast(d.data.text)
                     }
                 }) 
             }
@@ -124,25 +125,12 @@ export default {
         //请求推荐列表
         recommendRequest(){
             var _this = this;
-            pageData.recommendRes(this.recommendData).then(function (res) {
+            pageData.recommendRes().then(function (res) {
                 _this.loading = false;
-                if(res.resultCode == 200) {
-                    if(!res.resultJson.pageContent.length){
-                       _this.finished = true;
-                       return;
-                    }
-                    if(res.resultJson.pageNum === 1) {
-                        _this.recommendList = res.resultJson.pageContent;
-                    } else {
-                        for(var i=0;i<res.resultJson.pageContent.length;i++){
-                            if(JSON.stringify(_this.recommendList).indexOf(JSON.stringify(res.resultJson.pageContent[i])) == -1){
-                                _this.recommendList = _this.recommendList.concat(res.resultJson.pageContent);
-                            }
-                        }
-                    }
-                    _this.allowLoadMore = true;
+                if(res.resultcode == "0000") {
+                    _this.recommendList = res.data
                 }else{
-                     _this.$toast(res.resultMessage);
+                     _this.$toast(res.data.text);
                  }
             })
         },
