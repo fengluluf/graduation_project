@@ -230,7 +230,6 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       })
-    res.send('success');
   })
   //删除一级分类
   .post('/deleteFirst', async (req, res, next) => {
@@ -268,7 +267,6 @@ module.exports = router
     sql2.deletes('id', req.body.id)
       .then(function (d) {
         console.log(d);
-        res.send('success');
       })
       .catch(function (err) {
         console.log(err);

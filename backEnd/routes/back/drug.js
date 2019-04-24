@@ -131,7 +131,7 @@ module.exports = router
             data: {
               result: '00',
               text: '查询成功',
-              array: d[0]
+              array: d
             }
           })
         } else {
@@ -260,14 +260,12 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       })
-    res.send('success');
   })
   //删除二级分类
   .post('/deleteSecond', async (req, res, next) => {
     sql2.deletes('id', req.body.id)
       .then(function (d) {
         console.log(d);
-        res.send('success');
       })
       .catch(function (err) {
         console.log(err);
@@ -304,7 +302,6 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       })
-    res.send('success');
   })
   //更改一级分类
   .post('/updateFirst', async (req, res, next) => {
