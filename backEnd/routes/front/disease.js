@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const sql = require('../../service/disease');
-const sql1 = sql.diseaseCate;
+const sql1 = sql.diseasecate;
 const sql2 = sql.diseasecate2;
 const sql3 = sql.disease;
 
@@ -47,7 +47,7 @@ module.exports = router
           data: {
             result: '00',
             text: '查询成功',
-            array: d[0]
+            array: d
           }
         })
       } else {
