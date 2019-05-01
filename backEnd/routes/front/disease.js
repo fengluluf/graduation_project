@@ -66,7 +66,7 @@ module.exports = router
   })
 
   //获取三级分类
-  .post('/getSecond', async (req, res, next) => {
+  .post('/getThird', async (req, res, next) => {
     sql3.select('diseaseCate2', req.body.diseasecate2)
     .then(function (d) {
       if (d[0]) {
@@ -75,7 +75,7 @@ module.exports = router
           data: {
             result: '00',
             text: '查询成功',
-            array: d[0]
+            array: d
           }
         })
       } else {

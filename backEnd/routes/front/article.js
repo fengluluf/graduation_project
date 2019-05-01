@@ -263,4 +263,33 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       });
-  });
+  })
+
+  //根据id获取文章详情
+  .post('/getArticleInfo', function (req, res, next) {
+    var id = req.body.id;
+    aSql.select('id', id)
+      .then(function (d) {
+        if(d){
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '获取成功',
+              array:d
+            }
+          });
+        }else{
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '01',
+              text: '获取文章失败'
+            }
+          });
+        }
+      })
+      .catch(function (err) {
+        console.log(err);
+      });
+  })
