@@ -72,6 +72,38 @@ module.exports = router
      })
   })
 
+  //获取首页推荐文章
+  .get('/getArticles',async(req,res,next)=>{
+    aSql.shows()
+      .then(function(d){
+        res.send({
+          resultcode:'0000',
+          data: {
+            result: '00',
+            text: '获取成功',
+            array:d
+          }
+        })
+      })
+  })
+
+  //添加首页文章
+  .post('/addArticles',async(req,res,next)=>{
+    aSql.inserts(('advername','advertext'),(req.body.advername,req.body.advertext))
+      .then(function(d){
+        res.send({
+          resultcode:'0000',
+          data: {
+            result: '00',
+            text: '添加成功',
+          }
+        })
+      })
+      .catch(function(err){
+        console.log(err);
+      })
+  })
+
   //按用户id查询文章
   .post('/searchchArticle',async(req,res,next)=>{
     aSql.select('userId',req.body.userId)

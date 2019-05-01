@@ -103,7 +103,7 @@ module.exports = router
             data: {
               result: '00',
               text: '查询成功',
-              array: d[0]
+              array: d
             }
           })
         } else {
@@ -228,20 +228,33 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       })
-    res.send('success');
   })
   //删除一级分类
   .post('/deleteFirst', async (req, res, next) => {
     sql1.deletes('id', req.body.id)
       .then(function (d) {
-        console.log(d);
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '删除成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
       })
     sql2.deletes('drugcate', req.body.id)
       .then(function (d) {
-        console.log(d);
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '删除成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
@@ -265,7 +278,14 @@ module.exports = router
   .post('/deleteSecond', async (req, res, next) => {
     sql2.deletes('id', req.body.id)
       .then(function (d) {
-        console.log(d);
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '删除成功',
+            array: d[0]
+          }
+        })
       })
       .catch(function (err) {
         console.log(err);
@@ -284,7 +304,6 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       })
-    res.send('success');
   })
   //删除药品
   .post('/delete', async (req, res, next) => {

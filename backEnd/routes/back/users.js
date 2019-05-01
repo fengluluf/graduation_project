@@ -124,7 +124,7 @@ module.exports = router
 
   //前台注册
   .post('/registers', async (req, res, next) => {
-    var userName = req.body.usernumber,
+    var userName = req.body.userNumber,
       password = req.body.password;
       console.log(req.body.usernumber,req.body.password);
       password = utility.md5(password); 
@@ -218,14 +218,14 @@ module.exports = router
 
   //前台用户登录
   .post('/logins', async (req, res, next) => {
-    var userName = req.body.usernumber,
+    var userName = req.body.userNumber,
       password = req.body.password;
 
     password = utility.md5(password);
 
     uSql.select('username', userName)
       .then(function (d) {
-        console.log(d);
+        console.log('ddd',d);
         if (d[0]) {
           var user = d[0].username,
             pas = d[0].password;
@@ -268,4 +268,22 @@ module.exports = router
       .catch(function (err) {
         console.log(err);
       });
-  });
+  })
+
+  //获取用户列表
+  .get('/getLogin', async (req, res, next) => {
+    uSql.show()
+      .then(function(d){
+        res.send({
+          resultcode: '0000',
+          data: {
+            result: '00',
+            text: '获取成功',
+            array:d
+          }
+        })
+      })
+      .catch(function(err){
+        console.log(err);
+      })
+  })

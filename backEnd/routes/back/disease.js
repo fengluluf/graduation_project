@@ -49,7 +49,7 @@ module.exports = router
           data: {
             result: '00',
             text: '查询成功',
-            array: d[0]
+            array: d
           }
         })
       } else {
@@ -77,7 +77,7 @@ module.exports = router
           data: {
             result: '00',
             text: '查询成功',
-            array: d[0]
+            array: d
           }
         })
       } else {
@@ -105,7 +105,7 @@ module.exports = router
           data: {
             result: '00',
             text: '查询成功',
-            array: d[0]
+            array: d
           }
         })
       } else {
@@ -133,7 +133,7 @@ module.exports = router
           data: {
             result: '00',
             text: '查询成功',
-            array: d[0]
+            array: d
           }
         })
       } else {
@@ -181,8 +181,9 @@ module.exports = router
 
   //增加一级分类
   .post('/addFirst', async (req, res, next) => {
-    sql1.insert('disaesename', req.body.diseasename)
+    sql1.insert('diseasename', req.body.diseasename)
       .then(function (d) {
+        console.log(d);
         res.send({
           resultcode: '0000',
           data: {
