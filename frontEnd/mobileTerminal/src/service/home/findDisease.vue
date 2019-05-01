@@ -9,7 +9,7 @@
                     <div class="listItem" v-for="(item,key) in diseaseSort" :key="key" @click="goDiseaseSort(item)">
                         <van-row>
                             <van-col span="21">
-                                <div class="listCon">{{item.name}}</div>
+                                <div class="listCon">{{item.diseasename}}</div>
                             </van-col>
                             <van-col span="3">
                                 <span class="goDetail"><van-icon name="arrow" /></span>
@@ -58,6 +58,7 @@ export default {
             pageData.diseaseRes().then(function (d) {
                 if(d.resultcode == "0000") {
                     _this.diseaseSort = d.data.array;
+                    console.log(_this.diseaseSort)
                 }else{
                     _this.$dialog.alert({
                         message: d.data.text

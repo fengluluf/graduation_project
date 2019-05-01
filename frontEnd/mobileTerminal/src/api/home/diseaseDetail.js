@@ -1,20 +1,19 @@
 import $ from 'jquery'
-import _ from 'lodash'
 import netAjax from '../net/net-ajax'
 import {develop, baseUrl} from '../../config'
 
 export default {
 
     /**
-     * 登录
+     * 疾病详情查询
      * @param data
      */
-    login: function (data) {
+    //药品详情查询
+    getDiseaseDetail: function (data) {
         if(develop) {
             var def = $.Deferred();
             setTimeout(function () {
                 var d = {
-                    resultCode: 200
                 }
                 def.resolve(d);
             }, 100);
@@ -22,8 +21,8 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/backUsers/login',
-                data:data,
+                url: baseUrl + '/disease/diseaseInfo',
+                data: data,
                 type: 'POST',
                 success: function (d) {
                     def.resolve(d)

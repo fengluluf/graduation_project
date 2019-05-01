@@ -66,20 +66,29 @@ export default {
                 userName: this.userName,
                 password: this.password
             }
-            // if(this.checkName() && this.checkPwd()){
+            if(this.checkName() && this.checkPwd()){
                 pageData.login(data).then(function (d) {
-                    if(d.resultCode == 200) {
-                        _this.$router.push('/home');
-                        sessionStorage.setItem("userId", d.resultJson.id);
-                        sessionStorage.setItem("userName", d.resultJson.userName);
+                    _this.$router.push('/home');
+                    return;
+                    if(d.resultcode == '0000') {
+                        if(d.data.result == "00"){
+                            _this.$router.push('/home');
+                            sessionStorage.setItem("userId", d.resultJson.id);
+                            sessionStorage.setItem("userName", d.resultJson.userName);
+                        }else{
+                            _this.$message({
+                                type: "warning",
+                                message: d.data.text
+                            });
+                        }
                     }else{
                         _this.$message({
                             type: "warning",
-                            message: d.resultMessage
+                            message: d.data.text
                         });
                     }
                 })
-            // }
+            }
         },
     }
 }

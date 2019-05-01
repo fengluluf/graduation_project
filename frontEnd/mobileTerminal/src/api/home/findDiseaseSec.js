@@ -1,26 +1,18 @@
 import $ from 'jquery'
-import _ from 'lodash'
 import netAjax from '../net/net-ajax'
 import {develop, baseUrl} from '../../config'
 
 export default {
 
     /**
-     * 用户列表
+     * 疾病二级分类
      * @param data
      */
-    //获取表格信息
-    listInfo: function (data) {
+     getSortList: function (data) {
         if(develop) {
             var def = $.Deferred();
             setTimeout(function () {
                 var d = {
-                    "resultCode": 200,
-                    "resultJson": {
-                        "count": 8,
-                        "pageContent": [
-                        ]
-                    }
                 }
                 def.resolve(d);
             }, 100);
@@ -28,9 +20,9 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/backUsers/getLogin',
-                data:data,
-                type: 'GET',
+                url: baseUrl + '/disease/getSecond',
+                data: data,
+                type: 'POST',
                 success: function (d) {
                     def.resolve(d)
                 },
@@ -41,12 +33,12 @@ export default {
             return def;
         }
     },
-    deleteAll: function (data) {
+    //疾病三级分类查询
+    getDiseaseList: function (data) {
         if(develop) {
             var def = $.Deferred();
             setTimeout(function () {
                 var d = {
-                    "resultCode": 200,
                 }
                 def.resolve(d);
             }, 100);
@@ -54,9 +46,9 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/business-server/news/bySelf',
-                data:data,
-                type: 'GET',
+                url: baseUrl + '/disease/getThird',
+                data: data,
+                type: 'POST',
                 success: function (d) {
                     def.resolve(d)
                 },
@@ -67,4 +59,5 @@ export default {
             return def;
         }
     },
+
 }

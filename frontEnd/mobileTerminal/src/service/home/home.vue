@@ -97,7 +97,7 @@ export default {
     methods: {
         //确定搜索
         onSearch(){
-            this.$router.push("/search")
+            this.$router.push("/search");
         },
         //滚动条与底部距离小于 offset 时触发
         listUpload(){

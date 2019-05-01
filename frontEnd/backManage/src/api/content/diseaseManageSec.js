@@ -6,7 +6,7 @@ import {develop, baseUrl} from '../../config'
 export default {
 
     /**
-     * 药品二级分类
+     * 用户列表
      * @param data
      */
     //获取表格信息
@@ -15,7 +15,7 @@ export default {
             var def = $.Deferred();
             setTimeout(function () {
                 var d = {
-                    "resultCode": '0000',
+                    "resultcode": '0000',
                 }
                 def.resolve(d);
             }, 100);
@@ -23,7 +23,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/backDrug/getSecond',
+                url: baseUrl + '/backDisease/getallSecond',
                 data:data,
                 type: 'GET',
                 success: function (d) {
@@ -36,7 +36,35 @@ export default {
             return def;
         }
     },
-    deleteAll: function (data) {
+    //获取药品一级分类
+    getdiseasesortFir: function (data) {
+        if(develop) {
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                    "resultcode": '0000',
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
+        }else {
+            var def = $.Deferred();
+            netAjax.singleRequest({
+                url: baseUrl + '/backDisease/getFirst',
+                data:data,
+                type: 'GET',
+                success: function (d) {
+                    def.resolve(d)
+                },
+                error: function (d) {
+                    def.resolve(d)
+                }
+            })
+            return def;
+        }
+    },
+    //根据药品一级分类获取药品二级分类
+    getSecond: function (data) {
         if(develop) {
             var def = $.Deferred();
             setTimeout(function () {
@@ -49,9 +77,90 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/business-server/news/bySelf',
+                url: baseUrl + '/backDisease/getSecond',
                 data:data,
-                type: 'GET',
+                type: 'POST',
+                success: function (d) {
+                    def.resolve(d)
+                },
+                error: function (d) {
+                    def.resolve(d)
+                }
+            })
+            return def;
+        }
+    },
+    //添加二级分类
+    addSecond: function (data) {
+        if(develop) {
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                    "resultCode": 200,
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
+        }else {
+            var def = $.Deferred();
+            netAjax.singleRequest({
+                url: baseUrl + '/backDisease/addSecond',
+                data:data,
+                type: 'POST',
+                success: function (d) {
+                    def.resolve(d)
+                },
+                error: function (d) {
+                    def.resolve(d)
+                }
+            })
+            return def;
+        }
+    },
+    //删除二级分类
+    deleteSecond: function (data) {
+        if(develop) {
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                    "resultCode": 200,
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
+        }else {
+            var def = $.Deferred();
+            netAjax.singleRequest({
+                url: baseUrl + '/backDisease/deleteSecond',
+                data:data,
+                type: 'POST',
+                success: function (d) {
+                    def.resolve(d)
+                },
+                error: function (d) {
+                    def.resolve(d)
+                }
+            })
+            return def;
+        }
+    },
+    //确认修改
+    sendModifyData: function (data) {
+        if(develop) {
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                    "resultcode": '0000',
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
+        }else {
+            var def = $.Deferred();
+            netAjax.singleRequest({
+                url: baseUrl + '/backDisease/updateSecond',
+                data:data,
+                type: 'POST',
                 success: function (d) {
                     def.resolve(d)
                 },

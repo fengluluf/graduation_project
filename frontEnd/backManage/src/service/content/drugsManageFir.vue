@@ -211,9 +211,9 @@ export default {
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                PageData.deleteItem(data).then(function(res){
+                PageData.deleteItem(data).then(res=>{
                     if(res.resultcode=="0000"){
-                        if(d.data.result=="00"){
+                        if(res.data.result=="00"){
                             this.$message({
                                 type: 'success',
                                 message: '删除成功!'
@@ -222,13 +222,13 @@ export default {
                         }else{
                             this.$message({
                                 type: 'warnning',
-                                message: d.data.text
+                                message: res.data.text
                             }); 
                         }
                     }else{
                         this.$message({
                             type: 'warnning',
-                            message: d.data.text
+                            message: res.data.text
                         }); 
                     }
                 })

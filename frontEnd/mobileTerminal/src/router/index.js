@@ -36,6 +36,9 @@ const router = new Router({
             name: "search",
             component: () =>
                 import ('../service/home/search.vue'),
+            meta: {
+                keepAlive: true
+            }
         },
         { // 健康贴士详情
             path: '/tipsDetail',
@@ -78,9 +81,6 @@ const router = new Router({
             name: "findDiseaseSec",
             component: () =>
                 import ('../service/home/findDiseaseSec.vue'),
-            meta: {
-                keepAlive: true
-            }
         },
         { // 疾病详情
             path: '/diseaseDetail',

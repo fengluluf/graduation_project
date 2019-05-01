@@ -34,7 +34,7 @@
             </div>
             <el-table v-loading="loading" :data="tableData" style="width: 100%" border stripe size="small" @selection-change="handleSelectionChange" :height="tableListHeight">
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
-                <el-table-column align="center" prop="date" label="文章发布时间" width="200"></el-table-column>
+                <!-- <el-table-column align="center" prop="date" label="文章发布时间" width="200"></el-table-column> -->
                 <el-table-column align="center" prop="articleName" label="文章标题" width="180"></el-table-column>
                 <el-table-column align="center" prop="userName" label="作者" width="180"></el-table-column>
                 <el-table-column align="center" label="内容" width="180">
@@ -117,18 +117,18 @@ export default {
         //获取表格数据
         getTableData(){
             var _this = this;
-            var data = {
-                userId: userId,
-                pageNo: this.pager.currentPage,
-                pageSize: this.pager.pageSize
-            };
-            PageData.listInfo(data).then(function(d) {
-                if (d.resultCode == 200) {
+            // var data = {
+            //     userId: userId,
+            //     pageNo: this.pager.currentPage,
+            //     pageSize: this.pager.pageSize
+            // };
+            PageData.listInfo().then(function(d) {
+                if (d.resultcode == '0000') {
                     _this.loading = false;
-                    _this.tableData = d.resultJson.pageContent;
-                    _this.pager.pageNo = d.resultJson.pageNum;
-                    _this.pager.totalPage = d.resultJson.totalPage;
-                    _this.pager.total = d.resultJson.count;
+                    _this.tableData = d.data.array;
+                    // _this.pager.pageNo = d.resultJson.pageNum;
+                    // _this.pager.totalPage = d.resultJson.totalPage;
+                    // _this.pager.total = d.resultJson.count;
                 } else {
                     _this.$message({
                         type: "warning",
@@ -198,7 +198,7 @@ export default {
         //点击详情
         showItemHandler(val){
             this.dialogDetaileVisible = true;
-            this.articleDetaile = val.articleCon
+            this.articleDetaile = val.articleTxt
         },
         //表格选中项有变化时触发
         handleSelectionChange(val){

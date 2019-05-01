@@ -1,6 +1,6 @@
 <template>
-    <div class="diseaseManageFir">
-        <div class="diseaseManageFir-con">
+    <div class="diseasesManageFir">
+        <div class="diseasesManageFir-con">
             
             <div class="allDelete">
                 <el-button type="success" size="small" @click="sortAddHandler">添加</el-button>
@@ -9,16 +9,17 @@
             <el-table v-model="loading" :data="tableData" style="width: 100%" border stripe size="small" @selection-change="handleSelectionChange" :height="tableListHeight">
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
                 <el-table-column align="center" type="index" label="序号" width=""></el-table-column>
-                <el-table-column align="center" prop="date" label="修改时间"></el-table-column>
-                <el-table-column align="center" prop="diseaseSort" label="疾病一级分类名称"></el-table-column>
-                <el-table-column align="center" label="操作">
+                <!-- <el-table-column align="center" prop="date" label="修改时间"></el-table-column> -->
+                <el-table-column align="center" prop="diseasename" label="疾病一级分类名称"></el-table-column>
+                <el-table-column align="center" label="操作" width='300'>
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="deleteItemHandler(scope.row)" class="text-danger" :disabled="scope.row.status == 0">删除</el-button>
+                        <el-button type="text" size="small" @click="deleteItemHandler(scope.row)" class="text-danger">删除</el-button>
+                        <el-button type="text" size="small" @click="modifyItemHandler(scope.row)" class="text-primary">修改</el-button>
                     </template>
                 </el-table-column>
             </el-table>
         </div>
-        <el-dialog title="添加分类" :visible.sync="dialogAddSort">
+        <el-dialog :title="dialogTitle" :visible.sync="dialogAddSort">
             <div class="addSort">
                 <ul>
                     <li>
@@ -32,6 +33,20 @@
                 <el-button size="small" type="default" @click="cancelData()">取消</el-button>
             </span>
         </el-dialog>
+        <el-dialog title="修改分类" :visible.sync="dialogModifySort">
+            <div class="addSort">
+                <ul>
+                    <li>
+                        <span class="sortTitle">一级分类名称</span>
+                        <el-input type="text" size="small" placeholder="请输入内容" v-model="modifysortName"> </el-input>
+                    </li>
+                </ul>
+            </div>
+            <span slot="footer" class="dialog-footer text-center">
+                <el-button size="small" type="primary" @click="sendModifyData()">提交</el-button>
+                <el-button size="small" type="default" @click="cancelData()">取消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -41,7 +56,7 @@ import PageData from "../../api/content/diseaseManageFir.js"
 import {formatDate} from '../../util/base'
 
 export default {
-    name: 'diseaseManageFir',
+    name: 'diseasesManageFir',
     data () {
         return {
             searchData:{},//搜索的信息
@@ -55,7 +70,11 @@ export default {
             tableListHeight:0,//表格高度
             loading:true,//表格加载
             dialogAddSort:false,//是否显示添加弹窗
+            dialogModifySort:false,//是否显示修改弹窗
             addsortName:'',//添加的分类名称
+            modifysortName:'',//修改的分类名称
+            modifysortId:'',//修改的分类id
+            dialogTitle:'',//弹窗名称
         }
     },
     created(){
@@ -70,26 +89,79 @@ export default {
         //添加疾病分类
         sortAddHandler(){
             this.dialogAddSort = true;
+            this.dialogTitle = '添加分类'
         },
         //取消新增
         cancelData(){
             this.dialogAddSort = false;
             this.addsortName = "";
+            this.dialogModifySort = false;
+            this.modifysortName = "";
+            this.modifysortId = '';
         },
         //确认新增
         sendData(){
-
+            var _this = this;
+            var data = {diseasename:this.addsortName}
+            PageData.sendData(data).then(function(d){
+                if(d.resultcode=='0000'){
+                    if(d.data.result=='00'){
+                        _this.dialogAddSort = false;
+                        _this.dialogTitle = '';
+                        _this.addsortName = ""; 
+                        _this.getTableData();
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                }else{
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            })
+        },
+        //确认修改
+        sendModifyData(){
+            var _this = this;
+            var data = {
+                diseasename:this.modifysortName,
+                id:this.modifysortId
+            }
+            PageData.sendModifyData(data).then(function(d){
+                if(d.resultcode=='0000'){
+                    if(d.data.result=='00'){
+                        _this.dialogModifySort = false;
+                        _this.modifysortName = ""; 
+                        _this.modifysortId = "";
+                        _this.getTableData();
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                }else{
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            })
         },
         //设置表格高度
         resizeTableHeight1() {
-            let searchDiv = document.querySelector('.diseaseManageFir-header');
+            let searchDiv = document.querySelector('.diseasesManageFir-header');
             let searchDivHeight = searchDiv ? searchDiv.offsetHeight : 0
             let windowHeight = document.documentElement.clientHeight;
             let mainH = windowHeight-searchDivHeight-150 + 'px';
             this.tableListHeight = mainH;
         },
         resizeTableHeight2() {
-            let searchDiv = document.querySelector('.diseaseManageFir-header');
+            let searchDiv = document.querySelector('.diseasesManageFir-header');
             let searchDivHeight = searchDiv ? searchDiv.offsetHeight : 0
             let windowHeight = document.documentElement.clientHeight;
             let mainH = windowHeight-searchDivHeight-187 + 'px';
@@ -103,32 +175,65 @@ export default {
                 pageNo: this.pager.currentPage,
                 pageSize: this.pager.pageSize
             };
-            PageData.listInfo(data).then(function(d) {
-                if (d.resultCode == 200) {
-                    _this.loading = false;
-                    _this.tableData = d.resultJson.pageContent;
-                    _this.pager.pageNo = d.resultJson.pageNum;
-                    _this.pager.totalPage = d.resultJson.totalPage;
-                    _this.pager.total = d.resultJson.count;
+            PageData.listInfo().then(function(d) {
+                if (d.resultcode == "0000") {
+                    if(d.data.result == "00"){
+                        _this.loading = false;
+                        _this.tableData = d.data.array;
+                        console.log(_this.tableData)
+                        // _this.pager.pageNo = d.resultJson.pageNum;
+                        // _this.pager.totalPage = d.resultJson.totalPage;
+                        // _this.pager.total = d.resultJson.count;
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
                 } else {
                     _this.$message({
                         type: "warning",
-                        message: d.resultMessage
+                        message: d.data.text
                     });
                 }
             });
         },
+        //修改分类
+        modifyItemHandler(item){
+            this.dialogModifySort = true;
+            this.modifysortName = item.diseasename;
+            this.modifysortId = item.id;
+        },
         //删除分类
-        deleteItemHandler(){
+        deleteItemHandler(item){
+            var data = {id:item.id}
             this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
             confirmButtonText: '确定删除',
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
+                PageData.deleteItem(data).then(res=>{
+                    if(res.resultcode=="0000"){
+                        if(res.data.result=="00"){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.getTableData();
+                        }else{
+                            this.$message({
+                                type: 'warnning',
+                                message: res.data.text
+                            }); 
+                        }
+                    }else{
+                        this.$message({
+                            type: 'warnning',
+                            message: res.data.text
+                        }); 
+                    }
+                })
+                
             }).catch(() => {
                 this.$message({
                     type: 'info',
@@ -138,18 +243,19 @@ export default {
         },
         //全部删除
         allDelete(){
-            var data = [];
+            var data = {};
             if(this.multipleSelection.length!=0){
                 this.$confirm('此操作将永久删除所有选中的分类, 是否继续?', '提示', {
                 confirmButtonText: '确定删除',
                 cancelButtonText: '取消',
                 type: 'warning'
                 }).then(() => {
-                    for(var i=0;i<this.multipleSelection.length;i++){
-                        data.push(this.multipleSelection[i].id)
-                    }
+                    // for(var i=0;i<this.multipleSelection.length;i++){
+                    //     data.push(this.multipleSelection[i].id)
+                    // }
+                    data = {id:this.multipleSelection[0].id}
                     PageData.deleteAll(data).then(d => {
-                        if (d.resultCode == 200) {
+                        if (d.resultcode == "0000") {
                             this.$message({
                                 type: 'success',
                                 message: '删除成功!'
@@ -189,17 +295,17 @@ export default {
 </script>
 
 <style scoped>
-.diseaseManageFir-con{
+.diseasesManageFir-con{
     margin-top:10px;
 }
-.diseaseManageFir-con .allDelete{
+.diseasesManageFir-con .allDelete{
     float: right;
     margin-bottom: 5px;
 }
-.diseaseManageFir-con .text-danger{
+.diseasesManageFir-con .text-danger{
   color: #F56C6C;
 }
-.diseaseManageFir-con .text-danger.is-disabled{
+.diseasesManageFir-con .text-danger.is-disabled{
   color: #c0c4cc;
 }
 .el-pagination{

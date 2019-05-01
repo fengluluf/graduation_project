@@ -64,7 +64,7 @@
             layout="total, sizes, prev, pager, next, jumper"
             :total="pager.total">
         </el-pagination>
-        <el-dialog title="添加药品" :visible.sync="dialogAddSSort" :before-close="handleClose">
+        <el-dialog title="添加药品二级分类" :visible.sync="dialogAddSSort" :before-close="handleClose">
             <div class="drugs-content-dialog">
                 <ul>
                     <li>
@@ -82,6 +82,27 @@
             </div>
             <span slot="footer" class="dialog-footer text-center">
                 <el-button size="small" type="primary" @click="sendData()">提交</el-button>
+                <el-button size="small" type="default" @click="cancelData()">取消</el-button>
+            </span>
+        </el-dialog>
+        <el-dialog title="修改药品二级分类" :visible.sync="dialogModifySort" :before-close="handleClose">
+            <div class="drugs-content-dialog">
+                <ul>
+                    <li>
+                        <span class="content-title">一级分类</span>
+                        <el-select v-model="modifysort.drugsSortFir" placeholder="请选择" size="small">
+                            <el-option v-for="item in drugsOptionsFir" :key="item.id" :label="item.drugname" :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </li>
+                    <li>
+                        <span class="content-title">二级分类</span>
+                        <el-input type="text" size="small" placeholder="请输入内容" v-model="modifysort.drugsSortSec"> </el-input>
+                    </li>
+                </ul>
+            </div>
+            <span slot="footer" class="dialog-footer text-center">
+                <el-button size="small" type="primary" @click="sendModifyData()">提交</el-button>
                 <el-button size="small" type="default" @click="cancelData()">取消</el-button>
             </span>
         </el-dialog>
@@ -109,7 +130,10 @@ export default {
             loading:true,//表格加载
             drugsOptionsFir:{},//药品一级分类
             dialogAddSSort:false,//是否显示添加弹窗
+            dialogModifySort:false,//是否显示修改弹窗
+            modifysortId:'',//修改的内容ID
             drugs:{drugsSortFir:'',drugsSortSec:''},
+            modifysort:{drugsSortFir:'',drugsSortSec:''}
         }
     },
     created(){
@@ -182,6 +206,7 @@ export default {
                     if(d.data.result == "00"){
                         this.dialogAddSSort = false;
                         this.getTableData();
+                        this.drugs = {drugsSortFir:'',drugsSortSec:''}
                     }else{
                         _this.$message({
                             type: "warning",
@@ -196,17 +221,25 @@ export default {
                 }
             })
         },
-        //关闭添加弹窗
+        //关闭添加或修改弹窗
         handleClose(){
             this.dialogAddSSort = false;
+            this.dialogModifySort = false;
             this.drugs = {
                 drugsSortFir:'',drugsSortSec:''
             }
+            this.modifysort = {
+                drugsSortFir:'',drugsSortSec:''
+            }
         },
-        //取消添加
+        //取消添加或修改
         cancelData(){
             this.dialogAddSSort = false;
+            this.dialogModifySort = false;
             this.drugs = {
+                drugsSortFir:'',drugsSortSec:''
+            }
+            this.modifysort = {
                 drugsSortFir:'',drugsSortSec:''
             }
         },
@@ -269,18 +302,53 @@ export default {
         //修改分类
         modifyItemHandler(item){
             this.dialogModifySort = true;
-            this.modifysortName = item.drugname;
             this.modifysortId = item.id;
+            this.modifysort.drugsSortSec = item.drugname;
+            for(let i=0;i<this.drugsOptionsFir.length;i++){
+                if(this.drugsOptionsFir[i].id == item.drugcate){
+                    this.modifysort.drugsSortFir = this.drugsOptionsFir[i].drugname;
+                    return;
+                }
+            }
+        },
+        //修改确定提交
+        sendModifyData(){
+            var _this = this;
+            var data = {
+                updatename:this.modifysort.drugsSortSec,
+                id:this.modifysortId
+            }
+            PageData.sendModifyData(data).then(function(d){
+                if(d.resultcode=='0000'){
+                    if(d.data.result=='00'){
+                        _this.dialogModifySort = false;
+                        _this.modifysortName = ""; 
+                        _this.modifysortId = "";
+                        _this.getTableData();
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                }else{
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            })
         },
         //删除药品二级分类
-        deleteItemHandler(){
+        deleteItemHandler(item){
             var _this = this;
+            var data = {id:item.id}
             this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
             confirmButtonText: '确定删除',
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                PageData.deleteSecond().then(function(d) {
+                PageData.deleteSecond(data).then(function(d) {
                     if (d.resultcode == "0000") {
                         if(d.data.result == "00"){
                             _this.$message({

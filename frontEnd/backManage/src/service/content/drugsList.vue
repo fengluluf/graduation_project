@@ -17,12 +17,12 @@
                 </li> -->
                 <li>
                     <span>一级分类</span>
-                    <el-select v-model="searchData.drugsValueFir" placeholder="请选择" size="small">
+                    <el-select v-model="searchData.drugsValueFir" placeholder="请选择" size="small" @change="changeSortFir">
                         <el-option
                         v-for="item in drugsOptionsFir"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        :key="item.id"
+                        :label="item.drugname"
+                        :value="item.id">
                         </el-option>
                     </el-select>
                 </li>
@@ -30,10 +30,10 @@
                     <span>二级分类</span>
                     <el-select v-model="searchData.drugsValueSec" placeholder="请选择" size="small">
                         <el-option
-                        v-for="item in drugsOptionsSec"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="item in selectSortOptions"
+                        :key="item.id"
+                        :label="item.drugname"
+                        :value="item.id">
                         </el-option>
                     </el-select>
                 </li>
@@ -58,8 +58,8 @@
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
                 <el-table-column align="center" type="index" label="序号" width=""></el-table-column>
                 <!-- <el-table-column align="center" prop="date" label="药品发布时间" width="200"></el-table-column> -->
-                <el-table-column align="center" prop="drugCate" label="药品一级分类" width="180"></el-table-column>
-                <el-table-column align="center" prop="drugCate2" label="药品二级分类" width="180"></el-table-column>
+                <el-table-column align="center" prop="drugcateName" label="药品一级分类" width="180"></el-table-column>
+                <el-table-column align="center" prop="drugcate2Name" label="药品二级分类" width="180"></el-table-column>
                 <el-table-column align="center" prop="drugName" label="药品名称" width="180"></el-table-column>
                 <el-table-column align="center" label="内容" width="180">
                     <template slot-scope="scope">
@@ -184,35 +184,35 @@
                 <ul>
                     <li>
                         <span class="detaile-title">一级分类</span>
-                        <span class="detaile-con">{{drugsDetaile.drugsValueFir}}</span>
+                        <span class="detaile-con">{{drugsDetaile.drugcateName}}</span>
                     </li>
                     <li>
                         <span class="detaile-title">二级分类</span>
-                        <span class="detaile-con">{{drugsDetaile.drugsValueSec}}</span>
+                        <span class="detaile-con">{{drugsDetaile.drugcate2Name}}</span>
                     </li>
                     <li>
                         <span class="detaile-title">药品名称</span>
-                        <span class="detaile-con">{{drugsDetaile.name}}</span>
+                        <span class="detaile-con">{{drugsDetaile.drugName}}</span>
                     </li>
                     <li>
-                        <div class="detaile-title" v-if="drugsDetaile.introduction">简介</div>
-                        <span class="detaile-con" v-html="drugsDetaile.introduction"></span>
+                        <div class="detaile-title" v-if="drugsDetaile.drugTxt">简介</div>
+                        <span class="detaile-con" v-html="drugsDetaile.drugTxt"></span>
                     </li>
                     <li>
-                        <div class="detaile-title" v-if="drugsDetaile.indication">适应症</div>
-                        <span class="detaile-con" v-html="drugsDetaile.indication"></span>
+                        <div class="detaile-title" v-if="drugsDetaile.drugSymptom">适应症</div>
+                        <span class="detaile-con" v-html="drugsDetaile.drugSymptom"></span>
                     </li>
                     <li>
-                        <div class="detaile-title" v-if="drugsDetaile.dosage">用量用法</div>
-                        <span class="detaile-con" v-html="drugsDetaile.dosage"></span>
+                        <div class="detaile-title" v-if="drugsDetaile.drugUsage">用量用法</div>
+                        <span class="detaile-con" v-html="drugsDetaile.drugUsage"></span>
                     </li>
                     <li>
-                        <div class="detaile-title" v-if="drugsDetaile.precaution">注意事项</div>
-                        <span class="detaile-con" v-html="drugsDetaile.precaution"></span>
+                        <div class="detaile-title" v-if="drugsDetaile.drugAtten">注意事项</div>
+                        <span class="detaile-con" v-html="drugsDetaile.drugAtten"></span>
                     </li>
                     <li>
-                        <div class="detaile-title" v-if="drugsDetaile.remark">备注</div>
-                        <span class="detaile-con" v-html="drugsDetaile.remark"></span>
+                        <div class="detaile-title" v-if="drugsDetaile.text">备注</div>
+                        <span class="detaile-con" v-html="drugsDetaile.text"></span>
                     </li>
                 </ul>
             </div>
@@ -249,10 +249,12 @@ export default {
             drugsValueFir:'',//当前被选中的value属性值
             drugsOptionsSec:[{value:1,label:'drugsOptions'}],//二级药品分类
             drugsValueSec:'',//当前被选中的value属性值
-
+            selectSortOptions:[],
         }
     },
     created(){
+        this.getdrugsortFir();
+        this.getdrugsortSec();
         this.getTableData();
     },
     mounted() {
@@ -278,6 +280,90 @@ export default {
         },
         //点击搜索
         userSearchHandler(){
+            var _this = this;
+            var data = {drugcate2:this.searchData.drugsValueSec}
+            PageData.getThird(data).then(function(d) {
+                if (d.resultcode == "0000") {
+                    if(d.data.result == "00"){
+                        _this.tableData = d.data.array;
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            });
+        },
+        //一级分类选中事件
+        changeSortFir(){
+            var _this = this;
+            var data = {drugcate:this.searchData.drugsValueFir}
+            PageData.getSecond(data).then(function(d) {
+                if (d.resultcode == "0000") {
+                    if(d.data.result == "00"){
+                        _this.selectSortOptions = d.data.array;
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            });
+        },
+        //获取一级分类
+        getdrugsortFir(){
+            var _this = this;
+            PageData.getdrugsortFir().then(function(d) {
+                if (d.resultcode == "0000") {
+                    if(d.data.result == "00"){
+                        _this.drugsOptionsFir = d.data.array;
+
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            });
+        },
+        //获取二级分类
+        getdrugsortSec(){
+            var _this = this;
+            PageData.getdrugsortSec().then(function(d) {
+                if (d.resultcode == "0000") {
+                    if(d.data.result == "00"){
+                        _this.drugsOptionsSec = d.data.array;
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            });
         },
         //添加药品
         addDrugsHandler() {
@@ -317,9 +403,18 @@ export default {
                 if (d.resultcode == '0000') {
                     _this.loading = false;
                     _this.tableData = d.data.array;
-                    // _this.pager.pageNo = d.resultJson.pageNum;
-                    // _this.pager.totalPage = d.resultJson.totalPage;
-                    // _this.pager.total = d.resultJson.count;
+                    _this.tableData.forEach((item) => {
+                        for(let i=0;i<_this.drugsOptionsFir.length;i++){
+                            if(_this.drugsOptionsFir[i].id == item.drugCate){
+                                item.drugcateName = _this.drugsOptionsFir[i].drugname
+                            }
+                        }
+                        for(let i=0;i<_this.drugsOptionsSec.length;i++){
+                            if(_this.drugsOptionsSec[i].id == item.drugCate){
+                                item.drugcate2Name = _this.drugsOptionsSec[i].drugname
+                            }
+                        }
+                    })
                 } else {
                     _this.$message({
                         type: "warning",
@@ -332,6 +427,16 @@ export default {
         showItemHandler(val){
             this.dialogDetaileVisible = true;
             this.drugsDetaile = val
+            for(let i=0;i<this.drugsOptionsFir.length;i++){
+                if(this.drugsOptionsFir[i].id == val.drugCate){
+                    val.drugcateName = this.drugsOptionsFir[i].drugname
+                }
+            }
+            for(let i=0;i<this.drugsOptionsSec.length;i++){
+                if(this.drugsOptionsSec[i].id == val.drugCate2){
+                    val.drugcate2Name = this.drugsOptionsSec[i].drugname
+                }
+            }
         },
         //修改推荐
         updateItemHandler(row,idx) {

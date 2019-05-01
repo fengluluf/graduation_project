@@ -2,7 +2,7 @@
     <div class="userList">
         <div class="userList-header">
             <ul>
-                <li>
+                <!-- <li>
                     <span>注册时间</span>
                     <el-date-picker
                         v-model="searchData.newsDate"
@@ -14,7 +14,7 @@
                         format="yyyy 年 MM 月 dd 日"
                         value-format="timestamp">
                     </el-date-picker>
-                </li>
+                </li> -->
                 <li>
                     <span>用户名</span>
                     <el-input size="small" v-model="searchData.userName" placeholder="请输入用户名进行查询"></el-input>
@@ -34,10 +34,10 @@
             </div>
             <el-table v-model="loading" :data="tableData" style="width: 100%" border stripe size="small" @selection-change="handleSelectionChange" :height="tableListHeight">
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
-                <el-table-column align="center" prop="date" label="注册时间" width="200"></el-table-column>
-                <el-table-column align="center" prop="userName" label="用户名" width="180"></el-table-column>
-                <el-table-column align="center" prop="userImg" label="头像" width="180"></el-table-column>
-                <el-table-column align="center" prop="phoneNum" label="手机号" width="180"></el-table-column>
+                <!-- <el-table-column align="center" prop="date" label="注册时间" width="200"></el-table-column> -->
+                <el-table-column align="center" prop="username" label="用户名" width="180"></el-table-column>
+                <el-table-column align="center" prop="password" label="密码" width="180"></el-table-column>
+                <el-table-column align="center" prop="username" label="手机号" width="180"></el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="deleteItemHandler(scope.row)" class="text-danger" :disabled="scope.row.status == 0">删除</el-button>
@@ -108,18 +108,16 @@ export default {
         //获取表格数据
         getTableData(){
             var _this = this;
-            var data = {
-                userId: userId,
-                pageNo: this.pager.currentPage,
-                pageSize: this.pager.pageSize
-            };
-            PageData.listInfo(data).then(function(d) {
-                if (d.resultCode == 200) {
-                    _this.loading = false;
-                    _this.tableData = d.resultJson.pageContent;
-                    _this.pager.pageNo = d.resultJson.pageNum;
-                    _this.pager.totalPage = d.resultJson.totalPage;
-                    _this.pager.total = d.resultJson.count;
+            PageData.listInfo().then(function(d) {
+                if (d.resultcode == '0000') {
+                    if(d.data.result == "00"){
+                        _this.tableData = d.data.array;
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
                 } else {
                     _this.$message({
                         type: "warning",
