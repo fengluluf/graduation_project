@@ -66,9 +66,33 @@ let time = (startTime,endTime)=>{
   })
 }
 
+let shows = (startTime,endTime)=>{
+  return new Promise((resolve,reject)=>{
+    db.query(`select * from advertisement`,(err,rows)=>{
+      if(err){
+        reject(err);
+      }
+      resolve(rows);
+    })
+  })
+}
+
+let inserts = (startTime,endTime)=>{
+  return new Promise((resolve,reject)=>{
+    db.query(`insert into advertisement (${attributenames}) values ('${attributes[0]}','${attributes[1]}','${attributes[2]}')`,(err,rows)=>{
+      if(err){
+        reject(err);
+      }
+      resolve(rows);
+    })
+  })
+}
+
 exports.show = show
 exports.select = select
 exports.update = update
 exports.insert = insert
 exports.delete = deletes
 exports.time = time
+exports.inserts = inserts
+exports.shows = shows

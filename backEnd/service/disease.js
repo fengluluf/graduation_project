@@ -47,6 +47,17 @@ let disease = {
     })
   }, //增加
 
+  deletes: (attributenames, attributes) => {
+    return new Promise((resolve, reject) => {
+      db.query(`delete from disease where ${attributenames} = '${attributes}';`, (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows);
+      })
+    })
+  }, //删除
+
   search : (param) => {
     return new Promise((resolve, reject) => {
       db.query(`select * from disease where diseaseName like '%${param}%'`, (err, rows) => {
@@ -96,6 +107,7 @@ let diseasecate = {
   }, //修改
 
   insert: (attributenames, attributes) => {
+    console.log(attributenames,attributes);
     return new Promise((resolve, reject) => {
       db.query(`insert into diseasecate (${attributenames}) values ('${attributes}')`, (err, rows) => {
         if (err) {
@@ -104,7 +116,18 @@ let diseasecate = {
         resolve(rows);
       })
     })
-  } //增加
+  }, //增加
+
+  deletes: (attributenames, attributes) => {
+    return new Promise((resolve, reject) => {
+      db.query(`delete from diseasecate where ${attributenames} = '${attributes}';`, (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows);
+      })
+    })
+  }, //删除
 }
 
 //疾病二级分类
@@ -145,14 +168,25 @@ let diseasecate2 = {
   insert: (attributenames, attributes) => {
     return new Promise((resolve, reject) => {
       //diseasecate,diseasename
-      db.query(`insert into diseasecate2 (${attributenames}) values (${attributes[0]},'${attribute[1]}')`, (err, rows) => {
+      db.query(`insert into diseasecate2 (${attributenames}) values (${attributes[0]},'${attributes[1]}')`, (err, rows) => {
         if (err) {
           reject(err);
         }
         resolve(rows);
       })
     })
-  } //增加
+  }, //增加
+
+  deletes: (attributenames, attributes) => {
+    return new Promise((resolve, reject) => {
+      db.query(`delete from diseasecate2 where ${attributenames} = '${attributes}';`, (err, rows) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(rows);
+      })
+    })
+  }, //删除
 }
 
 exports.disease = disease;
