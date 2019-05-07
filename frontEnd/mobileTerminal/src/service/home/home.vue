@@ -41,8 +41,8 @@
                         <div class="recommend-item" v-for="(item,key) in recommendList" :key="key" @click="gotipsDetail(key)">
                             <van-row type="flex" justify="space-around">
                                 <van-col span="16">
-                                    <div class="recTitle">{{item.title}}</div>
-                                    <div class="recCon">{{item.con}}</div>
+                                    <div class="recTitle">{{item.advername}}</div>
+                                    <div class="recCon">{{item.advertext}}</div>
                                 </van-col>
                                 <van-col span="8">
                                     <img src="../../assets/images/img1.jpg" alt="" class="recImg">
@@ -92,7 +92,7 @@ export default {
         }
     },
     created() {
-        
+        this.recommendRequest();
     },
     methods: {
         //确定搜索
@@ -113,27 +113,36 @@ export default {
         //请求推荐列表
         recommendRequest(){
             var _this = this;
-            pageData.recommendRes(this.recommendData).then(function (res) {
+            pageData.recommendRes().then(function (res) {
                 _this.loading = false;
-                if(res.resultCode == 200) {
-                    if(!res.resultJson.pageContent.length){
-                       _this.finished = true;
-                       return;
-                    }
-                    if(res.resultJson.pageNum === 1) {
-                        _this.recommendList = res.resultJson.pageContent;
-                    } else {
-                        for(var i=0;i<res.resultJson.pageContent.length;i++){
-                            if(JSON.stringify(_this.recommendList).indexOf(JSON.stringify(res.resultJson.pageContent[i])) == -1){
-                                _this.recommendList = _this.recommendList.concat(res.resultJson.pageContent);
-                            }
-                        }
-                    }
-                    _this.allowLoadMore = true;
+                if(res.resultcode == "0000") {
+                    _this.recommendList = res.data.array
                 }else{
-                     _this.$toast(res.resultMessage);
+                     _this.$toast(res.data.text);
                  }
             })
+            // var _this = this;
+            // pageData.recommendRes(this.recommendData).then(function (res) {
+            //     _this.loading = false;
+            //     if(res.resultCode == 200) {
+            //         if(!res.resultJson.pageContent.length){
+            //            _this.finished = true;
+            //            return;
+            //         }
+            //         if(res.resultJson.pageNum === 1) {
+            //             _this.recommendList = res.resultJson.pageContent;
+            //         } else {
+            //             for(var i=0;i<res.resultJson.pageContent.length;i++){
+            //                 if(JSON.stringify(_this.recommendList).indexOf(JSON.stringify(res.resultJson.pageContent[i])) == -1){
+            //                     _this.recommendList = _this.recommendList.concat(res.resultJson.pageContent);
+            //                 }
+            //             }
+            //         }
+            //         _this.allowLoadMore = true;
+            //     }else{
+            //          _this.$toast(res.resultMessage);
+            //      }
+            // })
         },
         //点击banner
         gotipsDetail(item){

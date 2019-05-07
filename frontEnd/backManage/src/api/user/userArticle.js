@@ -73,4 +73,36 @@ export default {
             return def;
         }
     },
+    //获取用户列表
+    userList: function (data) {
+        if(develop) {
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                    "resultCode": 200,
+                    "resultJson": {
+                        "count": 8,
+                        "pageContent": [
+                        ]
+                    }
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
+        }else {
+            var def = $.Deferred();
+            netAjax.singleRequest({
+                url: baseUrl + '/backUsers/getLogin',
+                data:data,
+                type: 'GET',
+                success: function (d) {
+                    def.resolve(d)
+                },
+                error: function (d) {
+                    def.resolve(d)
+                }
+            })
+            return def;
+        }
+    },
 }

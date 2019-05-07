@@ -36,7 +36,7 @@
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
                 <el-table-column align="center" prop="time" label="文章发布时间" width="200"></el-table-column>
                 <el-table-column align="center" prop="articleName" label="文章标题" width="180"></el-table-column>
-                <el-table-column align="center" prop="userName" label="作者" width="180"></el-table-column>
+                <el-table-column align="center" prop="username" label="作者" width="180"></el-table-column>
                 <el-table-column align="center" label="内容" width="180">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showItemHandler(scope.row)">详情</el-button>
@@ -85,9 +85,11 @@ export default {
             loading: true,//表格加载
             dialogDetaileVisible:false,//是否显示详情弹窗
             articleDetaile:'',//文章详情
+            userList:[],//用户列表
         }
     },
     created(){
+        this.getuserList();
         this.getTableData();
     },
     mounted() {
@@ -114,21 +116,42 @@ export default {
         //点击搜索
         userSearchHandler(){
         },
+        //获取用户列表
+        getuserList(){
+            var _this = this;
+            PageData.userList().then(function(d) {
+                if (d.resultcode == '0000') {
+                    if(d.data.result == "00"){
+                        _this.userList = d.data.array;
+
+                    }else{
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.resultMessage
+                    });
+                }
+            });
+        },
         //获取表格数据
         getTableData(){
             var _this = this;
-            // var data = {
-            //     userId: userId,
-            //     pageNo: this.pager.currentPage,
-            //     pageSize: this.pager.pageSize
-            // };
             PageData.listInfo().then(function(d) {
                 if (d.resultcode == '0000') {
                     _this.loading = false;
                     _this.tableData = d.data.array;
-                    // _this.pager.pageNo = d.resultJson.pageNum;
-                    // _this.pager.totalPage = d.resultJson.totalPage;
-                    // _this.pager.total = d.resultJson.count;
+                    _this.tableData.forEach((item) => {
+                        for(let i=0;i<_this.userList.length;i++){
+                            if(_this.userList[i].id == item.userId){
+                                item.username = _this.userList[i].username
+                            }
+                        }
+                    })
                 } else {
                     _this.$message({
                         type: "warning",
