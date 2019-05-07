@@ -87,7 +87,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/backArticle/deleteArticle',
+                url: baseUrl + '/backArticle/deleteArticles',
                 data:data,
                 type: 'POST',
                 success: function (d) {

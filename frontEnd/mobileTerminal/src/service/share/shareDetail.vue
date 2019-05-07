@@ -192,7 +192,24 @@ export default {
         },
         //点赞或取消点赞
         lickArticle(){
-            this.likeObj.status = !this.likeObj.status
+            var _this = this;
+            var data = {
+                userId:1,
+                collectId:this.$route.query.id
+            }
+            PageData.articleCollect(data).then(function(d) {
+                if (d.resultcode == '0000') {
+                    // _this.likeObj.status = !_this.likeObj.status
+                    if(d.data.result=="00"){
+                        _this.likeObj.status = 0
+                    }else{
+                        _this.likeObj.status = 1
+                    }
+                    _this.$toast(d.data.text);
+                } else {
+                    _this.$toast(d.data.text);
+                }
+            });
         }
     },
 }

@@ -8,7 +8,7 @@
             <div slot="main" class="main">
                 <div class="main-article">
                     <div class="article-title">{{articleTitle}}</div>
-                    <div class="article-time">{{articleTime}}</div>
+                    <!-- <div class="article-time">{{articleTime}}</div> -->
                     <div class="article-con" v-html="articleCon"></div>
                 </div>
                 <div class="main-comment">
@@ -82,11 +82,11 @@ export default {
     components:{Layout},
     data() {
         return {
-            title:'用户分享',//页面标题
+            title:'健康推荐',//页面标题
             articleId:'',//文章ID
-            articleTitle:'中药降压靠谱不靠谱？',//文章标题
-            articleTime:'2018-03-26',//文章发布时间
-            articleCon:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药，西药具有副作用、具有成瘾性，吃了就停不下来”，而转向求助中药降压治疗。目前研究表明有多种中药具有明确的降血压作用，如玉米须、泽泻、山楂、夏枯草、野菊花、决明子、银杏叶、葛根等，但是降压中药多有自己的中药归类。如玉米须、泽泻为利水渗湿药，具有利尿的作用；山楂为消食药，具有降脂的作用；野菊花、决明子为平肝类药物，野菊花具有清肝明目的作用，决明子则有清肝明目和润肠通便作用；以及现代研究表明具有扩张血管的作用而降血压的银杏叶、葛根。中药并非单纯针对血压值而降压，而是根据患者的体质状态进行调整而达到降压的目的，但在实际应用中药降压的过程中也存在很多误区。',//文章内容
+            articleTitle:'',//文章标题
+            articleTime:'',//文章发布时间
+            articleCon:'',//文章内容
             isShowTitle:false,//是否将评论数固定在顶部
             commentsData:{ 
                 pageNo:1,
@@ -125,8 +125,8 @@ export default {
             PageData.singleArticleRequest(data).then(function(d) {
                 if (d.resultcode == '0000') {
                     _this.loading = false;
-                    _this.articleTitle = d.data.array[0].articleName;
-                    _this.articleCon = d.data.array[0].articleTxt;
+                    _this.articleTitle = d.data.array[0].advername;
+                    _this.articleCon = d.data.array[0].advertext;
                     _this.articleTime = d.data.array[0].time.substr(0,10)
                 } else {
                     _this.$message({

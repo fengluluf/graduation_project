@@ -35,8 +35,8 @@
             <el-table v-model="loading" :data="tableData" style="width: 100%" border stripe size="small" @selection-change="handleSelectionChange" :height="tableListHeight">
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
                 <el-table-column  align="center" type="index" label="序号" width=""></el-table-column>
-                <el-table-column align="center" prop="date" label="文章发布时间" width="200"></el-table-column>
-                <el-table-column align="center" prop="articleName" label="文章标题" width="180"></el-table-column>
+                <!-- <el-table-column align="center" prop="date" label="文章发布时间" width="200"></el-table-column> -->
+                <el-table-column align="center" prop="advername" label="文章标题" width="180"></el-table-column>
                 <el-table-column align="center" label="内容" width="180">
                     <template slot-scope="scope">
                         <el-button type="text" size="small" @click="showItemHandler(scope.row)">详情</el-button>
@@ -44,7 +44,7 @@
                 </el-table-column>
                 <el-table-column align="center" label="操作">
                     <template slot-scope="scope">
-                        <el-button type="text" size="small" @click="updateItemHandler(scope.row,scope.$index)">修改</el-button>
+                        <!-- <el-button type="text" size="small" @click="updateItemHandler(scope.row,scope.$index)">修改</el-button> -->
                         <el-button type="text" size="small" @click="deleteItemHandler(scope.row)" class="text-danger" :disabled="scope.row.status == 0">删除</el-button>
                     </template>
                 </el-table-column>
@@ -179,9 +179,15 @@ export default {
             PageData.addItem(data).then(function(d) {
                 if (d.resultcode == '0000') {
                     _this.$message({
-                        type: "sucess",
+                        type: "success",
                         message: d.data.text
                     });
+                    _this.getTableData();
+                    _this.dialogAddArticle = false;
+                    _this.article = {
+                        name: '',
+                        con: '',
+                    };
                 } else {
                     _this.$message({
                         type: "warning",
@@ -218,7 +224,7 @@ export default {
         //点击详情
         showItemHandler(val){
             this.dialogDetaileVisible = true;
-            this.articleDetaile = val.articleCon
+            this.articleDetaile = val.advertext
         },
         //修改推荐
         updateItemHandler(row,idx) {
@@ -226,15 +232,34 @@ export default {
             this.dialogUpdateArticle = true;
         },
         //删除推荐
-        deleteItemHandler(){
+        deleteItemHandler(item){
+            var data = {id:item.id}
+            var _this = this;
             this.$confirm('此操作将永久删除该推荐文章, 是否继续?', '提示', {
             confirmButtonText: '确定删除',
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
+                PageData.deleteItem(data).then(function(d) {
+                    if (d.resultcode == "0000") {
+                        if(d.data.result == "00"){
+                            _this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            _this.getTableData();
+                        }else{
+                            _this.$message({
+                                type: "warning",
+                                message: d.data.text
+                            });
+                        }
+                    } else {
+                        _this.$message({
+                            type: "warning",
+                            message: d.data.text
+                        });
+                    }
                 });
             }).catch(() => {
                 this.$message({

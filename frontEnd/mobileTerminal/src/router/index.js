@@ -129,9 +129,6 @@ const router = new Router({
             name: "myCollect",
             component: () =>
                 import ('../service/personal/myCollect.vue'),
-            meta: {
-                keepAlive: true
-            }
         },
         { // 我的文章
             path: '/myArticle',

@@ -99,5 +99,35 @@ export default {
             return def;
         }
     },
-
+    articleCollect: function (data) {
+        if(develop) {
+            var def = $.Deferred();
+            setTimeout(function () {
+                var d = {
+                    "resultCode": 200,
+                    "resultJson": {
+                        "pageContent": [
+                        ],
+                    },
+                    "resultMessage": "操作成功"
+                }
+                def.resolve(d);
+            }, 100);
+            return def;
+        }else {
+            var def = $.Deferred();
+            netAjax.singleRequest({
+                url: baseUrl + '/article/articleCollect',
+                data:data,
+                type: 'POST',
+                success: function (d) {
+                    def.resolve(d)
+                },
+                error: function (d) {
+                    def.resolve(d)
+                }
+            })
+            return def;
+        }
+    },
 }

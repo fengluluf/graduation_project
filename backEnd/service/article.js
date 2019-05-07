@@ -79,7 +79,8 @@ let shows = (startTime,endTime)=>{
 
 let inserts = (attributenames,attributes)=>{
   return new Promise((resolve,reject)=>{
-    db.query(`insert into advertisement (${attributenames}) values ('${attributes[0]}','${attributes[1]}','${attributes[2]}')`,(err,rows)=>{
+    console.log(attributenames);
+    db.query(`insert into advertisement (${attributenames}) values ('${attributes[0]}','${attributes[1]}')`,(err,rows)=>{
       if(err){
         reject(err);
       }
@@ -87,6 +88,28 @@ let inserts = (attributenames,attributes)=>{
     })
   })
 }
+
+let deletess = (attributenames, attributes) => {
+  return new Promise((resolve, reject) => {
+    db.query(`delete from advertisement where ${attributenames} = '${attributes}';`, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(rows);
+    })
+  })
+} //删除
+
+let info = (attributename, attribute) => {
+  return new Promise((resolve, reject) => {
+    db.query(`select * from advertisement where ${attributename} = '${attribute}'`, (err, rows) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(rows);
+    })
+  })
+} //查询一行（传参)
 
 exports.show = show
 exports.select = select
@@ -96,3 +119,5 @@ exports.delete = deletes
 exports.time = time
 exports.inserts = inserts
 exports.shows = shows
+exports.deletess = deletess
+exports.info = info

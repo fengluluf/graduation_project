@@ -65,12 +65,25 @@ module.exports = router
         if (d[0].collectId === null) {
           collectId = collectId;
           update(collectId,userId);
+          res.send({
+            resultcode: '0000',
+            data: {
+              result: '00',
+              text: '收藏成功'
+            }
+          })
         } else {
           //收藏文章
           if (d[0].collectId.split('|').indexOf((collectId).toString()) === -1) {
             collectId = d[0].collectId + '|' + collectId;
             update(collectId,userId);
-            res.send('success');
+            res.send({
+              resultcode: '0000',
+              data: {
+                result: '00',
+                text: '收藏成功'
+              }
+            })
           } else {
             //取消收藏
             var middle = remove(d[0].collectId.split('|'),collectId.toString());

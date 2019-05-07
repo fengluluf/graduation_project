@@ -89,7 +89,7 @@ module.exports = router
 
   //添加首页文章
   .post('/addArticles',async(req,res,next)=>{
-    aSql.inserts(('advername','advertext'),(req.body.advername,req.body.advertext))
+    aSql.inserts(['advername','advertext'],[req.body.advername,req.body.advertext])
       .then(function(d){
         res.send({
           resultcode:'0000',
@@ -102,6 +102,43 @@ module.exports = router
       .catch(function(err){
         console.log(err);
       })
+  })
+
+  //获取首页文章详情
+  .post('/getInfos',async(req,res,next)=>{
+    aSql.info('id',req.body.id)
+    .then(function(d){
+      console.log(d);
+      res.send({
+        resultcode:'0000',
+        data: {
+          result: '00',
+          text: '查询成功',
+          array:d
+        }
+      })
+    })
+    .catch(function(err){
+      console.log(err);
+    })
+  })
+
+  //删除首页文章
+ .post('/deleteArticles',async(req,res,next)=>{
+    aSql.deletess('id',req.body.id)
+    .then(function(d){
+      console.log(d);
+      res.send({
+        resultcode:'0000',
+        data: {
+          result: '00',
+          text: '删除成功',
+        }
+      })
+    })
+    .catch(function(err){
+      console.log(err);
+    })
   })
 
   //按用户id查询文章

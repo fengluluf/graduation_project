@@ -38,7 +38,7 @@
                     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" :immediate-check="false" :offset="50"
                     @load="listUpload"
                     class="recommend-list" >
-                        <div class="recommend-item" v-for="(item,key) in recommendList" :key="key" @click="gotipsDetail(key)">
+                        <div class="recommend-item" v-for="(item,key) in recommendList" :key="key" @click="gotipsDetail(item.id)">
                             <van-row type="flex" justify="space-around">
                                 <van-col span="16">
                                     <div class="recTitle">{{item.advername}}</div>
@@ -146,7 +146,7 @@ export default {
         },
         //点击banner
         gotipsDetail(item){
-            this.$router.push({path:'/shareDetail',query:{id:item}});
+            this.$router.push({path:'/tipsDetail',query:{id:item}});
         },
         //根据分类获取列表
         getSortRec(item){
