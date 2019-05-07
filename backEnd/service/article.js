@@ -77,7 +77,7 @@ let shows = (startTime,endTime)=>{
   })
 }
 
-let inserts = (startTime,endTime)=>{
+let inserts = (attributenames,attributes)=>{
   return new Promise((resolve,reject)=>{
     db.query(`insert into advertisement (${attributenames}) values ('${attributes[0]}','${attributes[1]}','${attributes[2]}')`,(err,rows)=>{
       if(err){

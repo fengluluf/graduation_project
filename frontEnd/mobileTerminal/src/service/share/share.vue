@@ -25,8 +25,8 @@
                         <div class="recommend-item" v-for="(item,key) in recommendList" :key="key" @click="goshareDetail(item)">
                             <van-row type="flex" justify="space-around">
                                 <van-col span="24">
-                                    <div class="recTitle">{{item.title}}</div>
-                                    <div class="recCon">{{item.con}}</div>
+                                    <div class="recTitle">{{item.articleName}}</div>
+                                    <div class="recCon">{{item.articleTxt}}</div>
                                 </van-col>
                             </van-row>
                         </div>
@@ -65,15 +65,15 @@ export default {
                 pageSize:10,
             },
             //推荐列表
-            recommendList:[{title:'带您走近传说中的“天山雪莲”',con:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
-            {title:'中药降压靠谱不靠谱？',con:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
-            {title:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',con:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'},
-            {title:'带您走近传说中的“天山雪莲”',con:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
-            {title:'中药降压靠谱不靠谱？',con:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
-            {title:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',con:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'},
-            {title:'带您走近传说中的“天山雪莲”',con:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
-            {title:'中药降压靠谱不靠谱？',con:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
-            {title:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',con:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'}]
+            recommendList:[{articleName:'带您走近传说中的“天山雪莲”',articleTxt:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
+            {articleName:'中药降压靠谱不靠谱？',articleTxt:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
+            {articleName:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',articleTxt:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'},
+            {articleName:'带您走近传说中的“天山雪莲”',articleTxt:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
+            {articleName:'中药降压靠谱不靠谱？',articleTxt:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
+            {articleName:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',articleTxt:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'},
+            {articleName:'带您走近传说中的“天山雪莲”',articleTxt:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
+            {articleName:'中药降压靠谱不靠谱？',articleTxt:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
+            {articleName:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',articleTxt:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'}]
         }
     },
     created() {
@@ -95,6 +95,7 @@ export default {
                 pageData.publishRes(data).then(function (d) {
                     if(d.resultcode == '0000') {
                         _this.isShowEdit = false;
+                        _this.recommendRequest();
                         _this.$toast(d.data.text)
                     }
                 }) 
@@ -128,7 +129,7 @@ export default {
             pageData.recommendRes().then(function (res) {
                 _this.loading = false;
                 if(res.resultcode == "0000") {
-                    _this.recommendList = res.data
+                    _this.recommendList = res.data.array
                 }else{
                      _this.$toast(res.data.text);
                  }

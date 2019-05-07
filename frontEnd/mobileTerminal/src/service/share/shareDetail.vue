@@ -73,7 +73,7 @@
     </div>
 </template>
 <script>
-import pageData from "../../api/home/tipsDetail.js"
+import PageData from "../../api/share/shareDetail.js"
 import "../../assets/style/font-icon/iconfont.css"
 import Layout from "../../components/layout/layout.vue"
 import base from '../../util/base'
@@ -82,7 +82,7 @@ export default {
     components:{Layout},
     data() {
         return {
-            title:'健康贴士',//页面标题
+            title:'用户分享',//页面标题
             articleId:'',//文章ID
             articleTitle:'中药降压靠谱不靠谱？',//文章标题
             articleTime:'2018-03-26',//文章发布时间
@@ -92,7 +92,7 @@ export default {
                 pageNo:1,
                 pageSize:10,
             },
-            commentsListData:{count:100},//评论列表数据
+            commentsListData:{count:4},//评论列表数据
             commentList:[{editorName:"用户1",createDate:"2019-03-08",content:"这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制"},
             {editorName:"用户2",createDate:"2019-03-08",content:"这是很多高血压患者经常提起的"},
             {editorName:"用户3",createDate:"2019-03-08",content:"中药治高血压，靠不靠谱？这是"},
@@ -113,10 +113,6 @@ export default {
     },
     created() {
         this.singleArticleRequest()
-        if(this.$route.query.id){
-            this.articleId = this.$route.query.id;
-            this.title = '健康贴士' + this.$route.query.id
-        }
     },
     methods: {
         //返回上一级
@@ -124,14 +120,21 @@ export default {
             this.$router.go(-1)
         },
         singleArticleRequest(){ // 新闻详情请求
-            let data = {}
-            data.id = this.articleId
-            pageData.singleArticleRequest(data).then(res=>{
-                let result = res.resultJson
-                // this.likeObj.status = result.status
-                // this.likeObj.id = result.id
-               
-            })
+            var _this = this;
+            var data = {id:this.$route.query.id}
+            PageData.singleArticleRequest(data).then(function(d) {
+                if (d.resultcode == '0000') {
+                    _this.loading = false;
+                    _this.articleTitle = d.data.array[0].articleName;
+                    _this.articleCon = d.data.array[0].articleTxt;
+                    _this.articleTime = d.data.array[0].time.substr(0,10)
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.resultMessage
+                    });
+                }
+            });
         },
         //加载评论列表
         listUpload(){
@@ -146,27 +149,18 @@ export default {
         },
         commentsRequest(){
             var _this = this;
-            pageData.commentsRes(this.commentsData).then(function (res) {
-                _this.loading = false;
-                if(res.resultCode == 200) {
-                    if(!res.resultJson.pageContent.length){
-                       _this.finished = true;
-                       return;
-                    }
-                    if(res.resultJson.pageNum === 1) {
-                        _this.commentsListData = res.resultJson.pageContent;
-                    } else {
-                        for(var i=0;i<res.resultJson.pageContent.length;i++){
-                            if(JSON.stringify(_this.commentsListData).indexOf(JSON.stringify(res.resultJson.pageContent[i])) == -1){
-                                _this.commentsListData = _this.commentsListData.concat(res.resultJson.pageContent);
-                            }
-                        }
-                    }
-                    _this.allowLoadMore = true;
-                }else{
-                     _this.$toast(res.resultMessage);
-                 }
-            })
+            var data = {id:this.$route.query.id}
+            PageData.singleArticleRequest(data).then(function(d) {
+                if (d.resultcode == '0000') {
+                    _this.loading = false;
+                    _this.tableData = d.data.array;
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.resultMessage
+                    });
+                }
+            });
         },
         commentFocusBlur(bol){ // 评论获取/失去焦点时
             this.isFocus = bol

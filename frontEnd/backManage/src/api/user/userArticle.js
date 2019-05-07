@@ -46,8 +46,8 @@ export default {
             return def;
         }
     },
-    //
-    getUserMsg: function (data) {
+    //删除文章
+    deleteItem: function (data) {
         if(develop) {
             var def = $.Deferred();
             setTimeout(function () {
@@ -60,9 +60,9 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/user-server/user/one',
+                url: baseUrl + '/backArticle/deleteArticle',
                 data:data,
-                type: 'GET',
+                type: 'POST',
                 success: function (d) {
                     def.resolve(d)
                 },

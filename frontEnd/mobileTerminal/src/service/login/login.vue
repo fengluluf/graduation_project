@@ -92,6 +92,8 @@ export default {
                 pageData.login(data).then(function (d) {
                     if(d.data.result == "00") {
                         _this.$router.push('/home');
+                        sessionStorage.setItem("userId",d.data.userInfo.userId)
+                        console.log(sessionStorage.getItem("userId"))
                     }else{
                         _this.$dialog.alert({
                             message: d.data.text

@@ -11,8 +11,8 @@
                     <div class="recommend-item" v-for="(item,key) in recommendList" :key="key" @click="goshareDetail(item)">
                         <van-row type="flex" justify="space-around">
                             <van-col span="24">
-                                <div class="recTitle">{{item.title}}</div>
-                                <div class="recCon">{{item.con}}</div>
+                                <div class="recTitle">{{item.articleName}}</div>
+                                <div class="recCon">{{item.articleTxt}}</div>
                             </van-col>
                         </van-row>
                     </div>
@@ -41,19 +41,11 @@ export default {
                 pageSize:10,
             },
             //推荐列表
-            recommendList:[{title:'带您走近传说中的“天山雪莲”',con:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
-            {title:'中药降压靠谱不靠谱？',con:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
-            {title:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',con:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'},
-            {title:'带您走近传说中的“天山雪莲”',con:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
-            {title:'中药降压靠谱不靠谱？',con:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
-            {title:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',con:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'},
-            {title:'带您走近传说中的“天山雪莲”',con:'对于天山雪莲，很多人的第一印象大概停留在武侠小说里，但今天，让小编带大家从中医药的角度来了解天山雪莲以及与“雪莲”相关的种种吧。',banner:''},
-            {title:'中药降压靠谱不靠谱？',con:'中药治高血压，靠不靠谱？这是很多高血压患者经常提起的问题。治疗高血压疾病的药物主要为西药类制剂，但很多患者不想服用西药，认为“高血压不能吃西药',banner:''},
-            {title:'“步行的学问”有多深？千万别荒废走路的“洪荒之力”！',con:'步行运动在大众中最容易普及，有利于健康又饶有趣味。中国居民膳食指南指出：中国居民每天的活动量达到6000步，'}]
+            recommendList:[]
         }
     },
     created() {
-        
+        this.recommendRequest()
     },
     methods: {
         //返回上一级
@@ -71,34 +63,26 @@ export default {
                 this.allowLoadMore = true
             }, 2000);
         },
-        //请求推荐列表
+        //请求我发表的文章列表
         recommendRequest(){
             var _this = this;
-            pageData.recommendRes(this.recommendData).then(function (res) {
+            var data = {userId:1}
+            pageData.recommendRes(data).then(function (res) {
                 _this.loading = false;
-                if(res.resultCode == 200) {
-                    if(!res.resultJson.pageContent.length){
-                       _this.finished = true;
-                       return;
+                if(res.resultcode == "0000") {
+                    if(res.data.result == "00"){
+                        _this.recommendList = res.data.array
+                    }else{
+                        _this.$toast(res.data.text);
                     }
-                    if(res.resultJson.pageNum === 1) {
-                        _this.recommendList = res.resultJson.pageContent;
-                    } else {
-                        for(var i=0;i<res.resultJson.pageContent.length;i++){
-                            if(JSON.stringify(_this.recommendList).indexOf(JSON.stringify(res.resultJson.pageContent[i])) == -1){
-                                _this.recommendList = _this.recommendList.concat(res.resultJson.pageContent);
-                            }
-                        }
-                    }
-                    _this.allowLoadMore = true;
                 }else{
-                     _this.$toast(res.resultMessage);
+                     _this.$toast(res.data.text);
                  }
             })
         },
         //进入分享详情
         goshareDetail(item){
-            this.$router.push({path:'/tipsDetail',query:{id:item.id}});
+            this.$router.push({path:'/shareDetail',query:{id:item.id}});
         }
     },
 }

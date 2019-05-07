@@ -34,7 +34,7 @@
             </div>
             <el-table v-loading="loading" :data="tableData" style="width: 100%" border stripe size="small" @selection-change="handleSelectionChange" :height="tableListHeight">
                 <el-table-column align="center" type="selection" width="55"></el-table-column>
-                <!-- <el-table-column align="center" prop="date" label="文章发布时间" width="200"></el-table-column> -->
+                <el-table-column align="center" prop="time" label="文章发布时间" width="200"></el-table-column>
                 <el-table-column align="center" prop="articleName" label="文章标题" width="180"></el-table-column>
                 <el-table-column align="center" prop="userName" label="作者" width="180"></el-table-column>
                 <el-table-column align="center" label="内容" width="180">
@@ -137,17 +137,35 @@ export default {
                 }
             });
         },
-        //删除用户
-        deleteItemHandler(){
-            this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+        //删除文章
+        deleteItemHandler(item){
+            var data = {userId:1,id:item.id}
+            this.$confirm('此操作将永久删除该文章, 是否继续?', '提示', {
             confirmButtonText: '确定删除',
             cancelButtonText: '取消',
             type: 'warning'
             }).then(() => {
-                this.$message({
-                    type: 'success',
-                    message: '删除成功!'
-                });
+                PageData.deleteItem(data).then(res=>{
+                    if(res.resultcode=="0000"){
+                        if(res.data.result=="00"){
+                            this.$message({
+                                type: 'success',
+                                message: '删除成功!'
+                            });
+                            this.getTableData();
+                        }else{
+                            this.$message({
+                                type: 'warnning',
+                                message: res.data.text
+                            }); 
+                        }
+                    }else{
+                        this.$message({
+                            type: 'warnning',
+                            message: res.data.text
+                        }); 
+                    }
+                })
             }).catch(() => {
                 this.$message({
                     type: 'info',

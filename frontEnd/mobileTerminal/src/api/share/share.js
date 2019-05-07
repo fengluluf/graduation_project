@@ -57,7 +57,7 @@ export default {
             netAjax.singleRequest({
                 url: baseUrl + '/backArticle/getArticle',
                 data:data,
-                type: 'POST',
+                type: 'GET',
                 success: function (d) {
                     def.resolve(d)
                 },

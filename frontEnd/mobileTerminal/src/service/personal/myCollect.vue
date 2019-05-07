@@ -136,7 +136,7 @@ export default {
         },
         //进入分享详情
         gohealthDetail(item){
-            this.$router.push({path:'/tipsDetail',query:{id:item.id}});
+            this.$router.push({path:'/shareDetail',query:{id:item.id}});
             this.listscrollTops = this.$children[0].$refs.main.scrollTop;
         },
         //进入分享详情

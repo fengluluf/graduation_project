@@ -137,7 +137,7 @@ export default {
         },
         //点击banner
         gotipsDetail(item){
-            this.$router.push({path:'/tipsDetail',query:{id:item}});
+            this.$router.push({path:'/shareDetail',query:{id:item}});
         },
         //根据分类获取列表
         getSortRec(item){

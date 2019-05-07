@@ -38,7 +38,7 @@
                         <span class="goDetail"><van-icon name="arrow" /></span>
                     </div>
                 </div>
-                <div class="main-btn"><van-button type="danger">退出登录</van-button></div>
+                <div class="main-btn"><van-button type="danger" @click="goLogin">退出登录</van-button></div>
             </div>
             <div slot="footer"></div>
         </Layout>
@@ -85,6 +85,11 @@ export default {
         },
         goMyarticle(){
             this.$router.push("/myArticle")
+        },
+        //退出登录
+        goLogin(){
+            console.log("11111111111")
+            this.$router.push("/")
         }
     },
 }

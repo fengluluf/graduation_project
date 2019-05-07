@@ -55,7 +55,7 @@ export default {
         }else {
             var def = $.Deferred();
             netAjax.singleRequest({
-                url: baseUrl + '/user-server/user/login',
+                url: baseUrl + '/backArticle/searchchArticle',
                 data:data,
                 type: 'POST',
                 success: function (d) {

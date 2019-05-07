@@ -171,7 +171,24 @@ export default {
         },
         //保存新增文章
         sendData(){
-            console.log(this.article.con)
+            var _this = this;
+            var data = {
+                advername:this.article.name,
+                advertext:this.article.con
+            }
+            PageData.addItem(data).then(function(d) {
+                if (d.resultcode == '0000') {
+                    _this.$message({
+                        type: "sucess",
+                        message: d.data.text
+                    });
+                } else {
+                    _this.$message({
+                        type: "warning",
+                        message: d.data.text
+                    });
+                }
+            });
         },
         //取消新增或修改
         cancelData() {
@@ -186,18 +203,10 @@ export default {
         //获取表格数据
         getTableData(){
             var _this = this;
-            var data = {
-                userId: userId,
-                pageNo: this.pager.currentPage,
-                pageSize: this.pager.pageSize
-            };
-            PageData.listInfo(data).then(function(d) {
-                if (d.resultCode == 200) {
+            PageData.listInfo().then(function(d) {
+                if (d.resultcode == '0000') {
                     _this.loading = false;
-                    _this.tableData = d.resultJson.pageContent;
-                    _this.pager.pageNo = d.resultJson.pageNum;
-                    _this.pager.totalPage = d.resultJson.totalPage;
-                    _this.pager.total = d.resultJson.count;
+                    _this.tableData = d.data.array;
                 } else {
                     _this.$message({
                         type: "warning",
